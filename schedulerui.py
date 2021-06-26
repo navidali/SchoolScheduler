@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/mquinn/scheduler.ui'
+# Form implementation generated from reading ui file 'scheduler.ui'
 #
 # Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QDialog, QFrame
+from db import *
 
 
 class Ui_MainWindow(object):
@@ -18,7 +19,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(1024, 768))
         MainWindow.setMaximumSize(QtCore.QSize(1024, 768))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("/home/mquinn/square.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("square.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -38,7 +39,7 @@ class Ui_MainWindow(object):
         self.search_button.setStyleSheet("background-color: rgb(0, 0, 127);")
         self.search_button.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("/home/mquinn/search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.search_button.setIcon(icon1)
         self.search_button.setObjectName("search_button")
         self.plusbutton = QtWidgets.QPushButton(self.centralwidget)
@@ -47,84 +48,94 @@ class Ui_MainWindow(object):
         self.plusbutton.setObjectName("plusbutton")
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setGeometry(QtCore.QRect(260, 10, 761, 60))
+
+        self.borderframe = QFrame(self)
+        self.borderframe.setGeometry(QtCore.QRect(260, 35, 760, 60))
+        self.borderframe.setStyleSheet("border: 1px solid black;")
+        self.borderframe.show()
+
         self.frame.setStyleSheet("")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.name = QtWidgets.QLabel(self.frame)
-        self.name.setGeometry(QtCore.QRect(20, 20, 131, 16))
+        self.name.setGeometry(QtCore.QRect(20, 20, 221, 16))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.name.setFont(font)
         self.name.setStyleSheet("")
         self.name.setObjectName("name")
         self.id = QtWidgets.QLabel(self.frame)
-        self.id.setGeometry(QtCore.QRect(150, 20, 160, 16))
+        self.id.setGeometry(QtCore.QRect(245, 20, 160, 16))
         self.id.setObjectName("id")
         self.grade = QtWidgets.QLabel(self.frame)
-        self.grade.setGeometry(QtCore.QRect(310, 20, 60, 16))
+        self.grade.setGeometry(QtCore.QRect(470, 20, 71, 16))
         self.grade.setObjectName("grade")
         self.num_credits = QtWidgets.QLabel(self.frame)
-        self.num_credits.setGeometry(QtCore.QRect(375, 20, 101, 16))
+        self.num_credits.setGeometry(QtCore.QRect(560, 20, 111, 16))
         self.num_credits.setObjectName("num_credits")
         self.gpa = QtWidgets.QLabel(self.frame)
-        self.gpa.setGeometry(QtCore.QRect(480, 20, 60, 16))
+        self.gpa.setGeometry(QtCore.QRect(685, 20, 61, 16))
         self.gpa.setObjectName("gpa")
         self.name_edit = QtWidgets.QLineEdit(self.frame)
-        self.name_edit.setGeometry(QtCore.QRect(75, 20, 71, 16))
+        self.name_edit.setGeometry(QtCore.QRect(75, 20, 161, 16))
         self.name_edit.setObjectName("name_edit")
         self.id_edit = QtWidgets.QLineEdit(self.frame)
-        self.id_edit.setGeometry(QtCore.QRect(220, 20, 85, 16))
+        self.id_edit.setGeometry(QtCore.QRect(315, 20, 85, 16))
         self.id_edit.setObjectName("id_edit")
         self.grade_edit = QtWidgets.QLineEdit(self.frame)
-        self.grade_edit.setGeometry(QtCore.QRect(355, 20, 16, 16))
+        self.grade_edit.setGeometry(QtCore.QRect(515, 20, 32, 16))
         self.grade_edit.setObjectName("grade_edit")
         self.credits_edit = QtWidgets.QLineEdit(self.frame)
-        self.credits_edit.setGeometry(QtCore.QRect(460, 20, 16, 16))
+        self.credits_edit.setGeometry(QtCore.QRect(645, 20, 32, 16))
         self.credits_edit.setObjectName("credits_edit")
         self.gpa_edit = QtWidgets.QLineEdit(self.frame)
-        self.gpa_edit.setGeometry(QtCore.QRect(510, 20, 32, 16))
+        self.gpa_edit.setGeometry(QtCore.QRect(720, 20, 32, 16))
         self.gpa_edit.setObjectName("gpa_edit")
         self.edit_button = QtWidgets.QToolButton(self.frame)
         self.edit_button.setGeometry(QtCore.QRect(740, 40, 20, 20))
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("/home/mquinn/edit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("edit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.edit_button.setIcon(icon2)
         self.edit_button.setObjectName("edit_button")
-        self.name_search = QtWidgets.QPushButton(self.centralwidget)
-        self.name_search.setGeometry(QtCore.QRect(0, 20, 125, 23))
         font = QtGui.QFont()
         font.setKerning(True)
-        self.name_search.setFont(font)
-        self.name_search.setStyleSheet("")
-        self.name_search.setObjectName("name_search")
-        self.ID_search = QtWidgets.QPushButton(self.centralwidget)
-        self.ID_search.setGeometry(QtCore.QRect(125, 20, 125, 23))
-        self.ID_search.setStyleSheet("")
-        self.ID_search.setObjectName("ID_search")
-        self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
-        self.scrollArea.setGeometry(QtCore.QRect(0, 40, 250, 681))
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setObjectName("scrollArea")
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 248, 679))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.verticalScrollBar = QtWidgets.QScrollBar(self.scrollAreaWidgetContents)
-        self.verticalScrollBar.setGeometry(QtCore.QRect(230, 0, 21, 521))
-        self.verticalScrollBar.setOrientation(QtCore.Qt.Vertical)
-        self.verticalScrollBar.setObjectName("verticalScrollBar")
-        self.logo = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.logo.setGeometry(QtCore.QRect(0, 640, 121, 41))
-        self.logo.setText("")
-        self.logo.setPixmap(QtGui.QPixmap("/home/mquinn/Webp.net-resizeimage.png"))
-        self.logo.setObjectName("logo")
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.tree_scroll_area = QtWidgets.QScrollArea(self.centralwidget)
+        self.tree_scroll_area.setGeometry(QtCore.QRect(0, 20, 250, 680))
+        self.tree_scroll_area.setWidgetResizable(True)
+        self.tree_scroll_area.setObjectName("tree_scroll_area")
+
+        self.students_tree = QtWidgets.QTreeWidget(self.centralwidget)
+        self.students_tree.setColumnCount(2)
+        self.students_tree.setGeometry(QtCore.QRect(0, 20, 250, 680))
+        self.tree_scroll_area_WidgetContents = QtWidgets.QWidget()
+        self.tree_scroll_area_WidgetContents.setGeometry(QtCore.QRect(0, 20, 250, 679))
+        self.tree_scroll_area_WidgetContents.setObjectName("tree_scroll_area_WidgetContents")
+        self.tree_scroll_area.setWidget(self.tree_scroll_area_WidgetContents)
+
+        self.tree_scroll_bar = QtWidgets.QScrollBar(self.tree_scroll_area_WidgetContents)
+        self.students_tree.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.tree_scroll_area.setVerticalScrollBar(self.tree_scroll_bar)
+        # self.students_tree = QtWidgets.QTreeWidget(self.tree_scroll_area_WidgetContents)
+        self.tree_scroll_area.setWidget(self.tree_scroll_area_WidgetContents)
+
+        self.students_tree.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.students_tree.setObjectName("students_tree")
+        self.students_tree.setSortingEnabled(True)
+
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
         self.frame_2.setGeometry(QtCore.QRect(260, 80, 372, 275))
-        self.frame_2.setStyleSheet("")
+        self.frame_2.setStyleSheet("border-color: rgb(0, 0, 0);")
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
+
+        self.borderframe2 = QFrame(self)
+        self.borderframe2.setGeometry(QtCore.QRect(260, 106, 372, 275))
+        self.borderframe2.setStyleSheet("border: 1px solid black;")
+        self.borderframe2.show()
+
         self.preferences = QtWidgets.QLabel(self.frame_2)
         self.preferences.setGeometry(QtCore.QRect(20, 20, 241, 16))
         font = QtGui.QFont()
@@ -179,6 +190,12 @@ class Ui_MainWindow(object):
         self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_3.setObjectName("frame_3")
+
+        # self.borderframe3 = QFrame(self)
+        # self.borderframe3.setGeometry(QtCore.QRect(642, 106, 372, 275))
+        # self.borderframe3.setStyleSheet("border: 1px solid black")
+        # self.borderframe3.show()
+
         self.requirements_scroll = QtWidgets.QScrollArea(self.frame_3)
         self.requirements_scroll.setGeometry(QtCore.QRect(0, 0, 372, 275))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
@@ -187,8 +204,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.requirements_scroll.sizePolicy().hasHeightForWidth())
         self.requirements_scroll.setSizePolicy(sizePolicy)
         self.requirements_scroll.setMinimumSize(QtCore.QSize(0, 100))
-        self.requirements_scroll.setStyleSheet("\n"
-"")
+        self.requirements_scroll.setStyleSheet("")
         self.requirements_scroll.setWidgetResizable(True)
         self.requirements_scroll.setObjectName("requirements_scroll")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
@@ -316,9 +332,16 @@ class Ui_MainWindow(object):
         self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_4.setObjectName("frame_4")
+
+        self.borderframe4 = QFrame(self)
+        self.borderframe4.setGeometry(QtCore.QRect(260, 391, 751, 355))
+        self.borderframe4.setStyleSheet("border: 1px solid black;")
+        self.borderframe4.show()
+
         self.label = QtWidgets.QLabel(self.frame_4)
-        self.label.setGeometry(QtCore.QRect(20, 20, 131, 16))
+        self.label.setGeometry(QtCore.QRect(20, 20, 151, 16))
         self.label.setObjectName("label")
+        self.label.setFont(font)
         self.tableWidget = QtWidgets.QTableWidget(self.frame_4)
         self.tableWidget.setGeometry(QtCore.QRect(20, 56, 320, 131))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
@@ -365,9 +388,7 @@ class Ui_MainWindow(object):
         self.search_button.raise_()
         self.plusbutton.raise_()
         self.frame.raise_()
-        self.name_search.raise_()
-        self.ID_search.raise_()
-        self.scrollArea.raise_()
+        # self.scroll_area_name.raise_()
         self.frame_2.raise_()
         self.frame_4.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
@@ -406,6 +427,17 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        students_list = get_students()
+        self.populate_student_list(students_list)
+
+        self.hide_edit_elements()
+        self.plusbutton.clicked.connect(self.enter_edit_mode)
+        self.edit_button.clicked.connect(self.enter_edit_mode)
+        self.ok_button.clicked.connect(self.exit_edit_mode)
+        self.actionSettings.triggered.connect(self.open_colors_dialog)
+        self.students_tree.itemClicked.connect(lambda: self.show_student(search_by_id(self.students_tree.currentItem().text(1), students_list)))
+        self.students_tree.itemClicked.connect(lambda: print(self.students_tree.currentItem().text(1)))
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -419,8 +451,13 @@ class Ui_MainWindow(object):
         self.num_credits.setText(_translate("MainWindow", "Total Credits: "))
         self.gpa.setText(_translate("MainWindow", "GPA: "))
         self.edit_button.setText(_translate("MainWindow", "..."))
-        self.name_search.setText(_translate("MainWindow", "Name                      "))
-        self.ID_search.setText(_translate("MainWindow", "ID                           "))
+
+        self.students_tree.headerItem().setText(0, _translate("MainWindow", "Name"))
+        self.students_tree.headerItem().setText(1, _translate("MainWindow", "ID"))
+        __sortingEnabled = self.students_tree.isSortingEnabled()
+        self.students_tree.setSortingEnabled(False)
+        self.students_tree.setSortingEnabled(__sortingEnabled)
+
         self.preferences.setText(_translate("MainWindow", "Course Preferences"))
         self.preference1.setText(_translate("MainWindow", "1. "))
         self.preference2.setText(_translate("MainWindow", "2. "))
@@ -489,3 +526,243 @@ class Ui_MainWindow(object):
         self.actionTeachers.setText(_translate("MainWindow", "Teachers"))
         self.actionCourses.setText(_translate("MainWindow", "Courses"))
         self.actionSettings.setText(_translate("MainWindow", "Settings"))
+
+    def check_box_enabled(self, tf):
+        self.checkBox_fsa_ela.setEnabled(tf)
+        self.checkBox_fsa_algebra.setEnabled(tf)
+        self.checkBox_ela_1.setEnabled(tf)
+        self.checkBox_ela_2.setEnabled(tf)
+        self.checkBox_ela_3.setEnabled(tf)
+        self.checkBox_ela_4.setEnabled(tf)
+        self.checkBox_algebra.setEnabled(tf)
+        self.checkBox_geometry.setEnabled(tf)
+        self.checkBox_math_3.setEnabled(tf)
+        self.checkBox_math_4.setEnabled(tf)
+        self.checkBox_pe.setEnabled(tf)
+        self.checkBox_bio.setEnabled(tf)
+        self.checkBox_sci_2.setEnabled(tf)
+        self.checkBox_sci_3.setEnabled(tf)
+        self.checkBox_history_us.setEnabled(tf)
+        self.checkBox_history_world.setEnabled(tf)
+        self.checkBox_econ.setEnabled(tf)
+        self.checkBox_gov.setEnabled(tf)
+        self.checkBox_e1.setEnabled(tf)
+        self.checkBox_e2.setEnabled(tf)
+        self.checkBox_e3.setEnabled(tf)
+        self.checkBox_e4.setEnabled(tf)
+        self.checkBox_e5.setEnabled(tf)
+        self.checkBox_e6.setEnabled(tf)
+        self.checkBox_e7.setEnabled(tf)
+        self.checkBox_e8.setEnabled(tf)
+        self.checkBox_art.setEnabled(tf)
+        self.checkBox_pe.setEnabled(tf)
+        self.checkBox_online.setEnabled(tf)
+
+    def hide_edit_elements(self):
+        self.name_edit.hide()
+        self.id_edit.hide()
+        self.grade_edit.hide()
+        self.credits_edit.hide()
+        self.gpa_edit.hide()
+        self.pref1edit.hide()
+        self.pref2edit.hide()
+        self.pref3edit.hide()
+        self.pref4edit.hide()
+        self.pref5edit.hide()
+        self.pref6edit.hide()
+        self.pref7edit.hide()
+        self.check_box_enabled(False)
+        self.ok_button.hide()
+        self.ok_button.setEnabled(False)
+
+    def show_edit_elements(self):
+        self.name_edit.show()
+        self.id_edit.show()
+        self.grade_edit.show()
+        self.credits_edit.show()
+        self.gpa_edit.show()
+        self.pref1edit.show()
+        self.pref2edit.show()
+        self.pref3edit.show()
+        self.pref4edit.show()
+        self.pref5edit.show()
+        self.pref6edit.show()
+        self.pref7edit.show()
+        self.ok_button.show()
+        self.ok_button.setEnabled(True)
+
+    def enter_edit_mode(self):
+        if self.name_edit.isHidden():
+            self.show_edit_elements()
+            self.check_box_enabled(True)
+
+    def exit_edit_mode(self):
+        self.hide_edit_elements()
+        self.check_box_enabled(False)
+
+    def set_color_1(self, id):
+        color = get_color_string(id)
+        self.name.setStyleSheet(color)
+        self.borderframe2.setStyleSheet("border: 1px solid; border-" + color)
+        # self.borderframe3.setStyleSheet("border: 1px solid; border-" + color)
+        self.label.setStyleSheet(color)
+
+    def set_color_2(self, id):
+        color = get_color_string(id)
+        self.preferences.setStyleSheet(color)
+        self.requirements.setStyleSheet(color)
+        self.ok_button.setStyleSheet("background-" + color)
+        self.borderframe.setStyleSheet("border: 1px solid; border-" + color)
+        self.borderframe4.setStyleSheet("border: 1px solid; border-" + color)
+
+    def open_colors_dialog(self):
+        colors_dialog = QDialog(self)
+        colors_dialog.setObjectName("colors_dialog")
+        colors_dialog.resize(600, 300)
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(colors_dialog)
+        self.buttonBox.setGeometry(QtCore.QRect(30, 238, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.label_1 = QtWidgets.QLabel(colors_dialog)
+        self.label_1.setGeometry(QtCore.QRect(30, 30, 211, 16))
+        self.label_1.setObjectName("label_1")
+        self.label_2 = QtWidgets.QLabel(colors_dialog)
+        self.label_2.setGeometry(QtCore.QRect(30, 130, 101, 16))
+        self.label_2.setObjectName("label_2")
+        self.red_button_1 = QtWidgets.QRadioButton(colors_dialog)
+        self.red_button_1.setGeometry(QtCore.QRect(40, 50, 100, 21))
+        self.red_button_1.setObjectName("red_button_1")
+        self.buttonGroup = QtWidgets.QButtonGroup(colors_dialog)
+        self.buttonGroup.setObjectName("buttonGroup")
+        self.buttonGroup.addButton(self.red_button_1, 1)
+        self.blue_button_1 = QtWidgets.QRadioButton(colors_dialog)
+        self.blue_button_1.setGeometry(QtCore.QRect(40, 90, 100, 21))
+        self.blue_button_1.setObjectName("blue_button_1")
+        self.buttonGroup.addButton(self.blue_button_1, 2)
+        self.orange_button_1 = QtWidgets.QRadioButton(colors_dialog)
+        self.orange_button_1.setGeometry(QtCore.QRect(150, 50, 100, 21))
+        self.orange_button_1.setObjectName("orange_button_1")
+        self.buttonGroup.addButton(self.orange_button_1, 3)
+        self.purple_button_1 = QtWidgets.QRadioButton(colors_dialog)
+        self.purple_button_1.setGeometry(QtCore.QRect(150, 90, 100, 21))
+        self.purple_button_1.setObjectName("purple_button_1")
+        self.buttonGroup.addButton(self.purple_button_1, 4)
+        self.yellow_button_1 = QtWidgets.QRadioButton(colors_dialog)
+        self.yellow_button_1.setGeometry(QtCore.QRect(260, 50, 100, 21))
+        self.yellow_button_1.setObjectName("yellow_button_1")
+        self.buttonGroup.addButton(self.yellow_button_1, 5)
+        self.black_button_1 = QtWidgets.QRadioButton(colors_dialog)
+        self.black_button_1.setGeometry(QtCore.QRect(260, 90, 100, 21))
+        self.black_button_1.setObjectName("black_button_1")
+        self.buttonGroup.addButton(self.black_button_1, 6)
+        self.green_button_1 = QtWidgets.QRadioButton(colors_dialog)
+        self.green_button_1.setGeometry(QtCore.QRect(380, 50, 100, 21))
+        self.green_button_1.setObjectName("green_button_1")
+        self.buttonGroup.addButton(self.green_button_1, 7)
+        self.white_button_1 = QtWidgets.QRadioButton(colors_dialog)
+        self.white_button_1.setGeometry(QtCore.QRect(380, 90, 100, 21))
+        self.white_button_1.setObjectName("white_button_1")
+        self.buttonGroup.addButton(self.white_button_1, 8)
+        self.red_button_2 = QtWidgets.QRadioButton(colors_dialog)
+        self.red_button_2.setGeometry(QtCore.QRect(40, 150, 100, 21))
+        self.red_button_2.setObjectName("red_button_2")
+        self.buttonGroup_2 = QtWidgets.QButtonGroup(colors_dialog)
+        self.buttonGroup_2.setObjectName("buttonGroup_2")
+        self.buttonGroup_2.addButton(self.red_button_2, 1)
+        self.blue_button_2 = QtWidgets.QRadioButton(colors_dialog)
+        self.blue_button_2.setGeometry(QtCore.QRect(40, 190, 100, 21))
+        self.blue_button_2.setObjectName("blue_button_2", )
+        self.buttonGroup_2.addButton(self.blue_button_2, 2)
+        self.purple_button_2 = QtWidgets.QRadioButton(colors_dialog)
+        self.purple_button_2.setGeometry(QtCore.QRect(150, 190, 100, 21))
+        self.purple_button_2.setObjectName("purple_button_2")
+        self.buttonGroup_2.addButton(self.purple_button_2, 4)
+        self.yellow_button_2 = QtWidgets.QRadioButton(colors_dialog)
+        self.yellow_button_2.setGeometry(QtCore.QRect(260, 150, 100, 21))
+        self.yellow_button_2.setObjectName("yellow_button_2")
+        self.buttonGroup_2.addButton(self.yellow_button_2, 5)
+        self.green_button_2 = QtWidgets.QRadioButton(colors_dialog)
+        self.green_button_2.setGeometry(QtCore.QRect(380, 150, 100, 21))
+        self.green_button_2.setObjectName("green_button_2")
+        self.buttonGroup_2.addButton(self.green_button_2, 7)
+        self.black_button_2 = QtWidgets.QRadioButton(colors_dialog)
+        self.black_button_2.setGeometry(QtCore.QRect(260, 190, 100, 21))
+        self.black_button_2.setObjectName("black_button_2")
+        self.buttonGroup_2.addButton(self.black_button_2, 6)
+        self.orange_button_2 = QtWidgets.QRadioButton(colors_dialog)
+        self.orange_button_2.setGeometry(QtCore.QRect(150, 150, 100, 21))
+        self.orange_button_2.setObjectName("orange_button_2")
+        self.buttonGroup_2.addButton(self.orange_button_2, 3)
+        self.white_button_2 = QtWidgets.QRadioButton(colors_dialog)
+        self.white_button_2.setGeometry(QtCore.QRect(380, 190, 100, 21))
+        self.white_button_2.setObjectName("white_button_2")
+        self.buttonGroup_2.addButton(self.white_button_2, 8)
+
+        _translate = QtCore.QCoreApplication.translate
+        colors_dialog.setWindowTitle(_translate("colors_dialog", "Dialog"))
+        self.label_1.setText(_translate("colors_dialog", "Select Color 1:"))
+        self.label_2.setText(_translate("colors_dialog", "Select Color 2:"))
+        self.red_button_1.setText(_translate("colors_dialog", "Red"))
+        self.blue_button_1.setText(_translate("colors_dialog", "Blue"))
+        self.orange_button_1.setText(_translate("colors_dialog", "Orange"))
+        self.purple_button_1.setText(_translate("colors_dialog", "Purple"))
+        self.yellow_button_1.setText(_translate("colors_dialog", "Yellow"))
+        self.black_button_1.setText(_translate("colors_dialog", "Black"))
+        self.green_button_1.setText(_translate("colors_dialog", "Green"))
+        self.white_button_1.setText(_translate("colors_dialog", "White"))
+        self.red_button_2.setText(_translate("colors_dialog", "Red"))
+        self.blue_button_2.setText(_translate("colors_dialog", "Blue"))
+        self.purple_button_2.setText(_translate("colors_dialog", "Purple"))
+        self.yellow_button_2.setText(_translate("colors_dialog", "Yellow"))
+        self.green_button_2.setText(_translate("colors_dialog", "Green"))
+        self.black_button_2.setText(_translate("colors_dialog", "Black"))
+        self.orange_button_2.setText(_translate("colors_dialog", "Orange"))
+        self.white_button_2.setText(_translate("colors_dialog", "White"))
+
+        self.buttonBox.accepted.connect(lambda: self.set_color_1(self.buttonGroup.checkedId()))
+        self.buttonBox.accepted.connect(lambda: self.set_color_2(self.buttonGroup_2.checkedId()))
+        self.buttonBox.accepted.connect(colors_dialog.accept)
+        self.buttonBox.rejected.connect(colors_dialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(colors_dialog)
+        colors_dialog.show()
+
+    def show_student(self, student):
+        self.name.setText("Name: " + student[1] + " " + student[2])
+        self.id.setText("Student ID: " + str(student[0]))
+        self.gpa.setText("GPA: " + str(student[3]))
+
+    def populate_student_list(self, students_list):
+        for student in students_list:
+            print("student")
+            item_name = QtWidgets.QTreeWidgetItem(self.students_tree)
+            item_name.setText(0, student[2] + ", " + student[1])
+            item_name.setText(1, str(student[0]))
+
+
+def get_color_string(id):
+    color_string = "color: "
+    if id == 1:
+        color_string += "rgb(255, 0, 0)"  # red
+    elif id == 2:
+        color_string += "rgb(0, 0, 127)"  # blue
+    elif id == 3:
+        color_string += "rgb(255, 85, 0)"  # orange
+    elif id == 4:
+        color_string += "rgb(85, 0, 127)"  # purple
+    elif id == 5:
+        color_string += "rgb(255, 210, 5)"  # yellow
+    elif id == 6:
+        color_string += "rgb(255, 255, 255)"  # black
+    elif id == 7:
+        color_string += "rgb(0, 170, 0)"  # green
+    else:
+        color_string += "rgb(0, 0, 0)"  # white
+    return color_string
+
+
+def search_by_id(student_id, student_list):
+    for student in student_list:
+        if student[0] == int(student_id):
+            return student
