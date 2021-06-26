@@ -1,5 +1,18 @@
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication
+import sys
+
 from db import *
 from schedule import *
+
+import schedulerui
+
+
+class SchoolScheduler(QtWidgets.QMainWindow, schedulerui.Ui_MainWindow):
+    def __init__(self, parent=None):
+        super(SchoolScheduler, self).__init__(parent)
+        self.setupUi(self)
+
 
 def insert_test_students():
     #(id, first, last, GPA)
@@ -40,15 +53,26 @@ def insert_test_preferences():
     insert_preference(7, 2, 7)
     
 def main():
+    # Insert test data
     insert_test_students()
     insert_test_classes()
     insert_test_preferences()
+
+    #UI
+    app = QApplication(sys.argv)
+    form = SchoolScheduler()
+    form.show()
+    app.exec_()
+
+    # TEMP - should be called from UI
     generate_schedule()
     get_schedules()
 
 
 if __name__ == '__main__':
+    # deletes test data, comment out first run after tables were modified 
     delete_all()
+    
     db_init()
     main()
     db_close()
