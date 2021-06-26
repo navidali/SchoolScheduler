@@ -21,6 +21,7 @@ def db_close():
 def get_students():
     students = cur.execute("SELECT * FROM Students").fetchall()
     print(json.dumps(students))
+    return students
 
 
 def insert_student(name, grade):
