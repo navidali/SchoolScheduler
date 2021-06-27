@@ -20,10 +20,15 @@ def db_close():
     con.close()
 
 
+def to_dict(query_out):
+    dict_arr = []
+    for i in query_out:
+        dict_arr.append(dict(i))
+    return dict_arr
+
 def get_students():
     students = cur.execute("SELECT * FROM Students").fetchall()
-    for s in students:
-        print(dict(s))
+    return to_dict(students)
 
 
 def insert_student(student_id, f_name, l_name, grade):
@@ -33,9 +38,12 @@ def insert_student(student_id, f_name, l_name, grade):
 
 def get_classes():
     classes = cur.execute("SELECT * FROM Classes").fetchall()
-    for c in classes:
-        print(dict(c))
-    return classes
+    return to_dict(classes)
+
+
+def get_classes_id_period(class_id, period):
+    classes = cur.execute(f"SELECT * FROM Classes WHERE id = {class_id} AND period = {period}").fetchone()
+    return dict(classes)
 
 
 def insert_class(student_id, class_name, period, capacity = 15):
@@ -50,9 +58,11 @@ def insert_schedule(class_id, student_id, period):
 
 def get_schedules():
     schedules = cur.execute("SELECT * FROM Schedules").fetchall()
-    for schedule in schedules:
-        print(dict(schedule))
+    return to_dict(schedules)
 
+def get_schedules_student(student_id):
+    schedules = cur.execute(f"SELECT * FROM Schedules WHERE student_id = {student_id}").fetchall()
+    return to_dict(schedules)
 
 def insert_preference(class_id, student_id, period):
     cur.execute(f'INSERT INTO Preferences VALUES ({class_id}, {student_id}, {period})')
@@ -61,19 +71,19 @@ def insert_preference(class_id, student_id, period):
 
 def get_preferences():
     preferences = cur.execute("SELECT * FROM Preferences").fetchall()
-    return preferences
+    return to_dict(preferences)
 
 
 def get_preferences_period(period):
     preferences = cur.execute(f"SELECT * FROM Preferences WHERE period = {period}").fetchall()
-    return preferences
+    return to_dict(preferences)
 
 
 def course_available(course_id, student_id, period):
     course = cur.execute(f'SELECT * FROM Classes WHERE id = {course_id} AND period = {period} LIMIT 1').fetchone()
     if (len(course) < 1):
         return False
-    capacity = dict(course)['capacity']
+    capacity = course['capacity']
     enrolled_count = cur.execute(f'SELECT Count(*) FROM Schedules WHERE class_id = {course_id} AND student_id = {student_id} AND period = {period}').fetchone()[0]
     if enrolled_count >= capacity:
         return False
