@@ -798,6 +798,7 @@ class Ui_MainWindow(object):
         insert_test_students()
         insert_test_courses()
         insert_test_preferences()
+        insert_test_coursework()
         self.populate_student_list()
 
     # Search should also apply to teachers in future
@@ -826,6 +827,14 @@ class Ui_MainWindow(object):
                 for p in qline:
                     qline[x].setText(str(x + 1) + '. ' + str(get_course(pref[x]['course_id'])[1]))
                     x += 1
+
+                classes = get_class_history(student[0])
+                index = 0
+                for c in classes:
+                    self.tableWidget.setItem(index, 0, QtWidgets.QTableWidgetItem(c['class']))
+                    self.tableWidget.setItem(index, 1, QtWidgets.QTableWidgetItem(str(c['credit'])))
+                    self.tableWidget.setItem(index, 2, QtWidgets.QTableWidgetItem(str(c['grade'])))
+                    index += 1
 
 
 def get_color_string(id):

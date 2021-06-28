@@ -20,6 +20,7 @@ def db_init():
 
     # Note that Preference period is almost meaningless and is simply here for indexing in UI
     cur.execute('''CREATE TABLE IF NOT EXISTS Preferences (course_id integer, student_id integer, period integer)''')
+    cur.execute('''CREATE TABLE IF NOT EXISTS Class_History (student_id integer, class text, credit real, grade text)''')
     con.commit()
 
 
@@ -29,6 +30,7 @@ def db_purge():
     cur.execute('''DROP TABLE IF EXISTS Courses''')
     cur.execute('''DROP TABLE IF EXISTS Schedules''')
     cur.execute('''DROP TABLE IF EXISTS Preferences''')
+    cur.execute('''DROP TABLE IF EXISTS Class_History''')
     con.commit()
 
 
@@ -56,6 +58,18 @@ def insert_student(student_id, f_name, l_name, grade):
     con.commit()
 
 
+# only handles id, name, and grade as of now
+def edit_student(student_id, new_id, f_name, l_name, grade):
+    cur.execute("UPDATE Students SET id=?, first=?, last=?, gpa=? WHERE id=?", (new_id, f_name, l_name, grade, student_id))
+    con.commit()
+
+
+# deletes student and coursework
+def delete_student(student_id):
+    cur.execute(f"DELETE FROM Students WHERE id = {student_id}")
+    cur.execute(f"DELETE FROM Class_History WHERE student_id = {student_id}")
+
+
 def get_classes():
     classes = cur.execute("SELECT * FROM Classes").fetchall()
     for c in classes:
@@ -65,7 +79,7 @@ def get_classes():
 
 # classes are defined sections of a course such that a course can have multiple sections
 def insert_class(course_id, class_name, period):
-    cur.execute(f'INSERT INTO Classes VALUES ({student_id}, "{class_name}", {period})')
+    cur.execute(f'INSERT INTO Classes VALUES ({course_id}, "{class_name}", {period})')
     con.commit()
 
 
@@ -123,6 +137,16 @@ def course_available(course_id, student_id, period):
     if enrolled_count >= capacity:
         return False
     return True
+
+
+def insert_class_history(student_id, name, credit, grade):
+    cur.execute(f'INSERT INTO Class_History VALUES ({student_id}, "{name}", {credit}, "{grade}")')
+    con.commit()
+
+
+def get_class_history(student_id):
+    classes = cur.execute(f"SELECT * FROM Class_History WHERE student_id = {student_id}").fetchall()
+    return classes
 
 
 def insert_test_students():
@@ -315,3 +339,19 @@ def insert_test_preferences():
 
         # Study Hall
         insert_preference(28, x, 7)
+
+
+def insert_test_coursework():
+    #student_id, name, credit, grade
+    classes = ["Algebra 1", "Geometry", "ELA 1", "Biology 1", "World History", "Economics", "Elective 1", "ART 1", "Study Hall"]
+    grade = ["A", "B", "C", "D"]
+    for student in get_students():
+        r1 = random.randint(0, 8)
+        r2 = random.randint(0, 3)
+        insert_class_history(student['id'], classes[r1], 3, grade[r2])
+        r1 = random.randint(0, 8)
+        r2 = random.randint(0, 3)
+        insert_class_history(student['id'], classes[r1], 3, grade[r2])
+        r1 = random.randint(0, 8)
+        r2 = random.randint(0, 3)
+        insert_class_history(student['id'], classes[r1], 3, grade[r2])
