@@ -22,10 +22,15 @@ Release Version
 
 Contributors:
 Justin Miller
+
 Julian Berrio
+
 Navid Ali
+
 Megan Quinn
+
 Michael Berry
+
 GITHUB: https://github.com/jaberrio/SchoolScheduler
 
 
