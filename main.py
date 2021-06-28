@@ -51,7 +51,15 @@ def insert_test_preferences():
     insert_preference(5, 2, 5)
     insert_preference(6, 2, 6)
     insert_preference(7, 2, 7)
-    
+
+
+def start_gui():
+    app = QApplication(sys.argv)
+    form = SchoolScheduler()
+    form.show()
+    app.exec_()
+
+
 def main():
     # Insert test data
     insert_test_students()
@@ -59,18 +67,14 @@ def main():
     insert_test_preferences()
 
     #UI
-    app = QApplication(sys.argv)
-    form = SchoolScheduler()
-    form.show()
-    app.exec_()
+    start_gui()
 
     # TEMP - should be called from UI
     generate_schedule()
-    get_schedules()
 
 
 if __name__ == '__main__':
-    # deletes test data, comment out first run after tables were modified 
+    # deletes test data, comment out and delete db file first run after tables were modified 
     delete_all()
     
     db_init()
