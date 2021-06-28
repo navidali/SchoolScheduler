@@ -605,13 +605,32 @@ class Ui_MainWindow(object):
         self.grade.setText("Grade: ")	
         self.num_credits.setText("Credits: ")	
         self.gpa.setText("GPA: ")
-        
+    
+    def clear_edit_fields(self):
+        self.name_edit.setText("")
+        self.id_edit.setText("")
+        self.grade_edit.setText("")
+        self.gpa_edit.setText("")
+        self.credits_edit.setText("")
+    
     def exit_edit_mode(self):
         if self.name_edit.text() != "":	
             self.create_new_student()	
         self.clear_edit_fields()
         self.hide_edit_elements()
         self.check_box_enabled(False)
+           		
+    def create_new_student(self):	
+        name = self.name_edit.text()	
+        first_last = name.split(" ", 2)	
+        insert_student(self.id_edit.text(), first_last[0], first_last[1], self.grade_edit.text())	
+        self.clear_edit_fields()	
+        self.refresh_list()	
+        
+    def refresh_list(self):	
+        self.students_tree.clear()	
+        students_list = get_students()	
+        self.populate_student_list(students_list)
 
     def set_color_1(self, id):
         color = get_color_string(id)
