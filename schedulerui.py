@@ -50,10 +50,10 @@ class Ui_MainWindow(object):
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setGeometry(QtCore.QRect(260, 10, 761, 60))
 
-        self.borderframe = QFrame(self)
-        self.borderframe.setGeometry(QtCore.QRect(260, 35, 760, 60))
-        self.borderframe.setStyleSheet("border: 1px solid black;")
-        self.borderframe.show()
+#         self.borderframe = QFrame(self)
+#         self.borderframe.setGeometry(QtCore.QRect(260, 35, 760, 60))
+#         self.borderframe.setStyleSheet("border: 1px solid black;")
+#         self.borderframe.show()
 
         self.frame.setStyleSheet("")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -132,10 +132,10 @@ class Ui_MainWindow(object):
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
 
-        self.borderframe2 = QFrame(self)
-        self.borderframe2.setGeometry(QtCore.QRect(260, 106, 372, 275))
-        self.borderframe2.setStyleSheet("border: 1px solid black;")
-        self.borderframe2.show()
+#         self.borderframe2 = QFrame(self)
+#         self.borderframe2.setGeometry(QtCore.QRect(260, 106, 372, 275))
+#         self.borderframe2.setStyleSheet("border: 1px solid black;")
+#         self.borderframe2.show()
 
         self.preferences = QtWidgets.QLabel(self.frame_2)
         self.preferences.setGeometry(QtCore.QRect(20, 20, 241, 16))
@@ -180,9 +180,9 @@ class Ui_MainWindow(object):
         self.pref6edit = QtWidgets.QLineEdit(self.frame_2)
         self.pref6edit.setGeometry(QtCore.QRect(40, 206, 211, 16))
         self.pref6edit.setObjectName("pref6edit")
-        self.preference6_2 = QtWidgets.QLabel(self.frame_2)
-        self.preference6_2.setGeometry(QtCore.QRect(20, 236, 225, 15))
-        self.preference6_2.setObjectName("preference6_2")
+        self.preference7 = QtWidgets.QLabel(self.frame_2)
+        self.preference7.setGeometry(QtCore.QRect(20, 236, 225, 15))
+        self.preference7.setObjectName("preference7")
         self.pref7edit = QtWidgets.QLineEdit(self.frame_2)
         self.pref7edit.setGeometry(QtCore.QRect(40, 236, 211, 16))
         self.pref7edit.setObjectName("pref7edit")
@@ -334,10 +334,10 @@ class Ui_MainWindow(object):
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_4.setObjectName("frame_4")
 
-        self.borderframe4 = QFrame(self)
-        self.borderframe4.setGeometry(QtCore.QRect(260, 391, 751, 355))
-        self.borderframe4.setStyleSheet("border: 1px solid black;")
-        self.borderframe4.show()
+#         self.borderframe4 = QFrame(self)
+#         self.borderframe4.setGeometry(QtCore.QRect(260, 391, 751, 355))
+#         self.borderframe4.setStyleSheet("border: 1px solid black;")
+#         self.borderframe4.show()
 
         self.label = QtWidgets.QLabel(self.frame_4)
         self.label.setGeometry(QtCore.QRect(20, 20, 151, 16))
@@ -469,7 +469,7 @@ class Ui_MainWindow(object):
         self.preference4.setText(_translate("MainWindow", "4. "))
         self.preference5.setText(_translate("MainWindow", "5. "))
         self.preference6.setText(_translate("MainWindow", "6. "))
-        self.preference6_2.setText(_translate("MainWindow", "7. "))
+        self.preference7.setText(_translate("MainWindow", "7. "))
         self.requirements.setText(_translate("MainWindow", "Graduation Requirements"))
         self.label_fsa.setText(_translate("MainWindow", "State Assessments"))
         self.checkBox_fsa_ela.setText(_translate("MainWindow", "FSA ELA"))
@@ -607,7 +607,7 @@ class Ui_MainWindow(object):
     def set_color_1(self, id):
         color = get_color_string(id)
         self.name.setStyleSheet(color)
-        self.borderframe2.setStyleSheet("border: 1px solid; border-" + color)
+        # self.borderframe2.setStyleSheet("border: 1px solid; border-" + color)
         # self.borderframe3.setStyleSheet("border: 1px solid; border-" + color)
         self.label.setStyleSheet(color)
 
@@ -616,8 +616,8 @@ class Ui_MainWindow(object):
         self.preferences.setStyleSheet(color)
         self.requirements.setStyleSheet(color)
         self.ok_button.setStyleSheet("background-" + color)
-        self.borderframe.setStyleSheet("border: 1px solid; border-" + color)
-        self.borderframe4.setStyleSheet("border: 1px solid; border-" + color)
+        # self.borderframe.setStyleSheet("border: 1px solid; border-" + color)
+        # self.borderframe4.setStyleSheet("border: 1px solid; border-" + color)
 
     def open_colors_dialog(self):
         colors_dialog = QDialog(self)
@@ -790,7 +790,7 @@ class Ui_MainWindow(object):
                 self.gpa.setText("GPA: " + str(student[3]))
 
                 qline = [self.preference1, self.preference2, self.preference3, self.preference4, self.preference5,
-                         self.preference6, self.preference6_2]
+                         self.preference6, self.preference7]
 
                 pref = get_preferences(student[0])
 
