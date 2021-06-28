@@ -49,17 +49,17 @@ class Ui_MainWindow(object):
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setGeometry(QtCore.QRect(260, 10, 761, 60))
 
-        self.borderframe = QFrame(self)
-        self.borderframe.setGeometry(QtCore.QRect(260, 35, 760, 60))
-        self.borderframe.setStyleSheet("border: 1px solid black;")
-        self.borderframe.show()
+        # self.borderframe = QFrame(self)
+        # self.borderframe.setGeometry(QtCore.QRect(260, 35, 760, 60))
+        # self.borderframe.setStyleSheet("border: 1px solid black;")
+        # self.borderframe.show()
 
         self.frame.setStyleSheet("")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.name = QtWidgets.QLabel(self.frame)
-        self.name.setGeometry(QtCore.QRect(20, 20, 221, 16))
+        self.name.setGeometry(QtCore.QRect(20, 20, 221, 20))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.name.setFont(font)
@@ -78,10 +78,10 @@ class Ui_MainWindow(object):
         self.gpa.setGeometry(QtCore.QRect(685, 20, 61, 16))
         self.gpa.setObjectName("gpa")
         self.name_edit = QtWidgets.QLineEdit(self.frame)
-        self.name_edit.setGeometry(QtCore.QRect(75, 20, 161, 16))
+        self.name_edit.setGeometry(QtCore.QRect(80, 20, 161, 16))
         self.name_edit.setObjectName("name_edit")
         self.id_edit = QtWidgets.QLineEdit(self.frame)
-        self.id_edit.setGeometry(QtCore.QRect(315, 20, 85, 16))
+        self.id_edit.setGeometry(QtCore.QRect(265, 20, 85, 16))
         self.id_edit.setObjectName("id_edit")
         self.grade_edit = QtWidgets.QLineEdit(self.frame)
         self.grade_edit.setGeometry(QtCore.QRect(515, 20, 32, 16))
@@ -131,10 +131,10 @@ class Ui_MainWindow(object):
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
 
-        self.borderframe2 = QFrame(self)
-        self.borderframe2.setGeometry(QtCore.QRect(260, 106, 372, 275))
-        self.borderframe2.setStyleSheet("border: 1px solid black;")
-        self.borderframe2.show()
+        # self.borderframe2 = QFrame(self)
+        # self.borderframe2.setGeometry(QtCore.QRect(260, 106, 372, 275))
+        # self.borderframe2.setStyleSheet("border: 1px solid black;")
+        # self.borderframe2.show()
 
         self.preferences = QtWidgets.QLabel(self.frame_2)
         self.preferences.setGeometry(QtCore.QRect(20, 20, 241, 16))
@@ -333,10 +333,10 @@ class Ui_MainWindow(object):
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_4.setObjectName("frame_4")
 
-        self.borderframe4 = QFrame(self)
-        self.borderframe4.setGeometry(QtCore.QRect(260, 391, 751, 355))
-        self.borderframe4.setStyleSheet("border: 1px solid black;")
-        self.borderframe4.show()
+        # self.borderframe4 = QFrame(self)
+        # self.borderframe4.setGeometry(QtCore.QRect(260, 391, 751, 355))
+        # self.borderframe4.setStyleSheet("border: 1px solid black;")
+        # self.borderframe4.show()
 
         self.label = QtWidgets.QLabel(self.frame_4)
         self.label.setGeometry(QtCore.QRect(20, 20, 151, 16))
@@ -435,7 +435,7 @@ class Ui_MainWindow(object):
         self.edit_button.clicked.connect(self.enter_edit_mode)
         self.ok_button.clicked.connect(self.exit_edit_mode)
         self.actionSettings.triggered.connect(self.open_colors_dialog)
-        self.students_tree.itemClicked.connect(lambda: self.show_student(search_by_id(self.students_tree.currentItem().text(1), students_list)))
+        self.students_tree.itemClicked.connect(lambda: self.show_student(search_by_id(self.students_tree.currentItem().text(1), get_students())))
         self.students_tree.itemClicked.connect(lambda: print(self.students_tree.currentItem().text(1)))
 
     def retranslateUi(self, MainWindow):
@@ -445,8 +445,8 @@ class Ui_MainWindow(object):
         self.dropdown.setItemText(1, _translate("MainWindow", "Teachers"))
         self.dropdown.setItemText(2, _translate("MainWindow", "Courses"))
         self.plusbutton.setText(_translate("MainWindow", "+"))
-        self.name.setText(_translate("MainWindow", "Name:"))
-        self.id.setText(_translate("MainWindow", "Student ID:"))
+        self.name.setText(_translate("MainWindow", "Name: "))
+        self.id.setText(_translate("MainWindow", "ID:"))
         self.grade.setText(_translate("MainWindow", "Grade: "))
         self.num_credits.setText(_translate("MainWindow", "Total Credits: "))
         self.gpa.setText(_translate("MainWindow", "GPA: "))
@@ -593,17 +593,30 @@ class Ui_MainWindow(object):
 
     def enter_edit_mode(self):
         if self.name_edit.isHidden():
+            if self.name.text() != "Name: ":
+                self.set_edit_elements()
+                self.clear_shown_student()
+                # shown student should be deleted
             self.show_edit_elements()
             self.check_box_enabled(True)
 
+    def clear_shown_student(self):
+        self.name.setText("Name: ")
+        self.id.setText("ID: ")
+        self.grade.setText("Grade: ")
+        self.num_credits.setText("Credits: ")
+        self.gpa.setText("GPA: ")
+
     def exit_edit_mode(self):
+        if self.name_edit.text() != "":
+            self.create_new_student()
         self.hide_edit_elements()
         self.check_box_enabled(False)
 
     def set_color_1(self, id):
         color = get_color_string(id)
         self.name.setStyleSheet(color)
-        self.borderframe2.setStyleSheet("border: 1px solid; border-" + color)
+        # self.borderframe2.setStyleSheet("border: 1px solid; border-" + color)
         # self.borderframe3.setStyleSheet("border: 1px solid; border-" + color)
         self.label.setStyleSheet(color)
 
@@ -612,8 +625,8 @@ class Ui_MainWindow(object):
         self.preferences.setStyleSheet(color)
         self.requirements.setStyleSheet(color)
         self.ok_button.setStyleSheet("background-" + color)
-        self.borderframe.setStyleSheet("border: 1px solid; border-" + color)
-        self.borderframe4.setStyleSheet("border: 1px solid; border-" + color)
+        # self.borderframe.setStyleSheet("border: 1px solid; border-" + color)
+        # self.borderframe4.setStyleSheet("border: 1px solid; border-" + color)
 
     def open_colors_dialog(self):
         colors_dialog = QDialog(self)
@@ -730,15 +743,40 @@ class Ui_MainWindow(object):
 
     def show_student(self, student):
         self.name.setText("Name: " + student[1] + " " + student[2])
-        self.id.setText("Student ID: " + str(student[0]))
+        self.id.setText("ID: " + str(student[0]))
         self.gpa.setText("GPA: " + str(student[3]))
 
     def populate_student_list(self, students_list):
         for student in students_list:
-            print("student")
             item_name = QtWidgets.QTreeWidgetItem(self.students_tree)
             item_name.setText(0, student[2] + ", " + student[1])
             item_name.setText(1, str(student[0]))
+
+    def create_new_student(self):
+        name = self.name_edit.text()
+        first_last = name.split(" ", 2)
+        insert_student(self.id_edit.text(), first_last[0], first_last[1], self.grade_edit.text())
+        self.clear_edit_fields()
+        self.refresh_list()
+
+    def refresh_list(self):
+        self.students_tree.clear()
+        students_list = get_students()
+        self.populate_student_list(students_list)
+
+    def clear_edit_fields(self):
+        self.name_edit.setText("")
+        self.id_edit.setText("")
+        self.grade_edit.setText("")
+        self.gpa_edit.setText("")
+        self.credits_edit.setText("")
+
+    def set_edit_elements(self):
+        self.name_edit.setText(self.name.text().split(" ")[1] + " " + self.name.text().split(" ")[2])
+        self.id_edit.setText(self.id.text().split(" ")[1])
+        self.grade_edit.setText(self.grade.text().split(" ")[1])
+        self.credits_edit.setText(self.num_credits.text().split(" ")[1])
+        self.gpa_edit.setText(self.gpa.text().split(" ")[1])
 
 
 def get_color_string(id):
