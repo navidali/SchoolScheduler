@@ -14,9 +14,7 @@ def db_init():
     cur.execute('''CREATE TABLE IF NOT EXISTS Classes (class_id integer, course_id, period integer)''')
     cur.execute('''CREATE TABLE IF NOT EXISTS Courses (course_id integer, name text, type text, capacity integer)''')
     # Note that a teacher will also have a schedule as such it is called user_id not just student_id
-    cur.execute('''CREATE TABLE IF NOT EXISTS Schedules (user_id integer, class_id_p1 integer,class_id_p2 integer,
-    class_id_p3 integer,class_id_p4 integer,class_id_p5 integer,class_id_p6 integer,class_id_p7 integer,class_id_p8 
-    integer)''')
+    cur.execute('''CREATE TABLE IF NOT EXISTS Schedules (user_id integer, class_id integer,period integer)''')
 
     # Note that Preference period is almost meaningless and is simply here for indexing in UI
     cur.execute('''CREATE TABLE IF NOT EXISTS Preferences (course_id integer, student_id integer, period integer)''')
@@ -47,6 +45,10 @@ def get_students():
     return cur.execute("SELECT * FROM Students").fetchall()
 
 
+def get_student(student_id):
+    return dict(cur.execute(f"SELECT * FROM Students WHERE id = {student_id}").fetchone())
+
+
 def get_courses():
     return to_dict(cur.execute("SELECT * FROM Courses").fetchall())
 
@@ -63,14 +65,18 @@ def get_classes():
     return classes
 
 
+def get_class_name(class_id):
+    course_id = dict(cur.execute(f"SELECT * FROM Classes WHERE class_id = {class_id}").fetchone())
+    return dict(cur.execute(f"SELECT * FROM Courses WHERE course_id = {course_id['course_id']}").fetchone())
+
 # classes are defined sections of a course such that a course can have multiple sections
-def insert_class(course_id, class_name, period):
-    cur.execute(f'INSERT INTO Classes VALUES ({student_id}, "{class_name}", {period})')
+def insert_class(class_id, course_id, period):
+    cur.execute(f'INSERT INTO Classes VALUES ({class_id},{course_id}, {period})')
     con.commit()
 
 
-def insert_schedule(class_id, student_id, period):
-    cur.execute(f'INSERT INTO Schedules VALUES ({class_id}, {student_id}, {period})')
+def insert_schedule(student_id, class_id, period):
+    cur.execute(f'INSERT INTO Schedules VALUES ({student_id}, {class_id}, {period})')
     con.commit()
 
 
@@ -89,7 +95,7 @@ def get_schedules():
 
 
 def get_schedules_student(student_id):
-    schedules = cur.execute(f"SELECT * FROM Schedules WHERE student_id = {student_id}").fetchall()
+    schedules = cur.execute(f"SELECT * FROM Schedules WHERE user_id = {student_id}").fetchall()
     return to_dict(schedules)
 
 
@@ -112,23 +118,33 @@ def get_preferences_period(period):
     return to_dict(preferences)
 
 
-def course_available(course_id, student_id, period):
-    course = cur.execute(f'SELECT * FROM Classes WHERE id = {course_id} AND period = {period} LIMIT 1').fetchone()
-    if (len(course) < 1):
-        return False
-    capacity = dict(course)['capacity']
-    enrolled_count = cur.execute(
-        f'SELECT Count(*) FROM Schedules WHERE class_id = {course_id} AND student_id = {student_id} AND period = {period}').fetchone()[
-        0]
-    if enrolled_count >= capacity:
-        return False
-    return True
+# TEMP IF COURSE NOT AVAIBLE WE RETURN STUDY HALL
+def course_available(course_id, period, student_id):
+    classes = cur.execute(f'SELECT * FROM Classes WHERE course_id = {course_id} AND period = {period}').fetchall()
+    classes = to_dict(classes)
+
+    for c in classes:
+        count = cur.execute(
+            f"SELECT Count(*) FROM Schedules WHERE class_id = {c['class_id']} AND period = {period}").fetchone()[0]
+        if count < 15:
+            return c['class_id']
+
+    return -1
+
+
+# check if a student has a class during a period
+def check_student_available(student_id, period):
+    num_in_period = \
+        cur.execute(f"SELECT Count(*) FROM Schedules WHERE user_id = {student_id} AND period = {period}").fetchone()[0]
+    if num_in_period == 0:
+        return True
+    return False
 
 
 def insert_test_students():
     # (id, first, last, GPA)
     words = open('words.txt', 'r')
-    lines = words.readlines()
+    lines = words.read().splitlines()
 
     for x in range(1000):
         insert_student(x, lines[random.randint(0, 10000)], lines[random.randint(0, 10000)], 4)

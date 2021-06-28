@@ -51,10 +51,10 @@ class Ui_MainWindow(object):
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setGeometry(QtCore.QRect(260, 10, 761, 60))
 
-#         self.borderframe = QFrame(self)
-#         self.borderframe.setGeometry(QtCore.QRect(260, 35, 760, 60))
-#         self.borderframe.setStyleSheet("border: 1px solid black;")
-#         self.borderframe.show()
+        #         self.borderframe = QFrame(self)
+        #         self.borderframe.setGeometry(QtCore.QRect(260, 35, 760, 60))
+        #         self.borderframe.setStyleSheet("border: 1px solid black;")
+        #         self.borderframe.show()
 
         self.frame.setStyleSheet("")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -133,10 +133,10 @@ class Ui_MainWindow(object):
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
 
-#         self.borderframe2 = QFrame(self)
-#         self.borderframe2.setGeometry(QtCore.QRect(260, 106, 372, 275))
-#         self.borderframe2.setStyleSheet("border: 1px solid black;")
-#         self.borderframe2.show()
+        #         self.borderframe2 = QFrame(self)
+        #         self.borderframe2.setGeometry(QtCore.QRect(260, 106, 372, 275))
+        #         self.borderframe2.setStyleSheet("border: 1px solid black;")
+        #         self.borderframe2.show()
 
         self.preferences = QtWidgets.QLabel(self.frame_2)
         self.preferences.setGeometry(QtCore.QRect(20, 20, 241, 16))
@@ -335,10 +335,10 @@ class Ui_MainWindow(object):
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_4.setObjectName("frame_4")
 
-#         self.borderframe4 = QFrame(self)
-#         self.borderframe4.setGeometry(QtCore.QRect(260, 391, 751, 355))
-#         self.borderframe4.setStyleSheet("border: 1px solid black;")
-#         self.borderframe4.show()
+        #         self.borderframe4 = QFrame(self)
+        #         self.borderframe4.setGeometry(QtCore.QRect(260, 391, 751, 355))
+        #         self.borderframe4.setStyleSheet("border: 1px solid black;")
+        #         self.borderframe4.show()
 
         self.label = QtWidgets.QLabel(self.frame_4)
         self.label.setGeometry(QtCore.QRect(20, 20, 151, 16))
@@ -507,12 +507,12 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Grade"))
         __sortingEnabled = self.tableWidget.isSortingEnabled()
         self.tableWidget.setSortingEnabled(False)
-#         item = self.tableWidget.item(0, 0)
-#         item.setText(_translate("MainWindow", "Algebra 1"))
-#         item = self.tableWidget.item(0, 1)
-#         item.setText(_translate("MainWindow", "1"))
-#         item = self.tableWidget.item(0, 2)
-#         item.setText(_translate("MainWindow", "A"))
+        #         item = self.tableWidget.item(0, 0)
+        #         item.setText(_translate("MainWindow", "Algebra 1"))
+        #         item = self.tableWidget.item(0, 1)
+        #         item.setText(_translate("MainWindow", "1"))
+        #         item = self.tableWidget.item(0, 2)
+        #         item.setText(_translate("MainWindow", "A"))
         self.tableWidget.setSortingEnabled(__sortingEnabled)
         self.ok_button.setText(_translate("MainWindow", "Ok"))
         self.menutoolbar.setTitle(_translate("MainWindow", "File"))
@@ -588,11 +588,11 @@ class Ui_MainWindow(object):
         self.ok_button.setEnabled(True)
 
     def enter_add_mode(self):
-        self.clear_shown_student()	
-        self.clear_edit_fields()	
-        self.show_edit_elements()	
+        self.clear_shown_student()
+        self.clear_edit_fields()
+        self.show_edit_elements()
         self.check_box_enabled(True)
-        
+
     def enter_edit_mode(self):
         self.clear_edit_fields()
         if self.name_edit.isHidden():
@@ -600,22 +600,22 @@ class Ui_MainWindow(object):
             self.check_box_enabled(True)
 
     def clear_shown_student(self):
-        self.name.setText("Name: ")	
-        self.id.setText("ID: ")	
-        self.grade.setText("Grade: ")	
-        self.num_credits.setText("Credits: ")	
+        self.name.setText("Name: ")
+        self.id.setText("ID: ")
+        self.grade.setText("Grade: ")
+        self.num_credits.setText("Credits: ")
         self.gpa.setText("GPA: ")
-    
+
     def clear_edit_fields(self):
         self.name_edit.setText("")
         self.id_edit.setText("")
         self.grade_edit.setText("")
         self.gpa_edit.setText("")
         self.credits_edit.setText("")
-    
+
     def exit_edit_mode(self):
-        if self.name_edit.text() != "":	
-            self.create_new_student()	
+        if self.name_edit.text() != "":
+            self.create_new_student()
         self.clear_edit_fields()
         self.hide_edit_elements()
         self.check_box_enabled(False)
@@ -627,8 +627,8 @@ class Ui_MainWindow(object):
         self.clear_edit_fields()	
         self.refresh_list()	
         
-    def refresh_list(self):	
-        self.list_tree.clear()	
+    def refresh_list(self):
+        self.students_tree.clear()
         students_list = get_students()	
         self.populate_student_list(students_list)
 

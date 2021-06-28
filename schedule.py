@@ -38,30 +38,57 @@ def generate_schedule():
     # implamented in C/Rust Also note this method ignores that fact that not all teachers can be everything breaking
     # down the model
 
-    for item in course_freq:
-        print(item)
-        print(course_freq[item])
-        num_classes = math.ceil(course_freq[item] / 15)
-        print(num_classes)
-        print('')
+    class_id = 1000
 
-        for x in range(1, num_classes):
-            print(x)
+    # insert_schedule()
+
+    # Calcs min number of required courses to give all students a class
+    for item in course_freq:
+        num_classes = math.ceil(course_freq[item] / 15)
+
+        # Creates an even distribution of classes for a given course over the 7 periods
+        for x in range(1, num_classes + 1):
+            insert_class(class_id, item, (x % 7) + 1)
+            class_id += 1
 
     # generate_pdfs()
+
+    # TODO FIX HARD CODED STUDENT IDs
+
+    for id in range(21):
+        if id % 100 == 0:
+            print(id)
+
+        pref = get_preference(id)
+        for p in pref:
+            class_id_search = -1
+            for x in range(1, 8):
+                class_id_search = course_available(p['course_id'], x, id)
+                if not class_id_search == -1 and check_student_available(id, x):
+                    insert_schedule(id, class_id_search, x)
+                    break
+        # Check for empty slots in schedule
+        for x in range(1, 8):
+            if check_student_available(id, x):
+                insert_schedule(id, 28, x)
+
+    print(get_schedules_student(20))
+
+    generate_pdfs()
 
 
 # Generate PDF schedules
 def generate_pdfs():
-    students = get_students()
-    for student in students:
-        schedules = get_schedules_student(student['id'])
-        canvas = Canvas(f"{student['id']}.pdf")
+    for x in range(20):
+        student = get_student(x)
+        schedules = get_schedules_student(x)
+        canvas = Canvas(f"export/{student['first']}_{x}.pdf")
         y_pos = 720
+
         canvas.drawString(72, y_pos, f"{student['first']} {student['last']}")
         canvas.drawString(396, y_pos, f"Student Id: {student['id']}")
         for sch in schedules:
             y_pos = y_pos - 36
-            sch_class = get_classes_id_period(sch['class_id'], sch['period'])
+            sch_class = get_class_name(sch['class_id'])
             canvas.drawString(72, y_pos, f"Period {sch['period']}: {sch_class['name']}")
         canvas.save()
