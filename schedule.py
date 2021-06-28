@@ -55,13 +55,10 @@ def generate_schedule():
 
     # TODO FIX HARD CODED STUDENT IDs
 
-    for id in range(21):
-        if id % 100 == 0:
-            print(id)
+    for id in range(100):
 
         pref = get_preference(id)
         for p in pref:
-            class_id_search = -1
             for x in range(1, 8):
                 class_id_search = course_available(p['course_id'], x, id)
                 if not class_id_search == -1 and check_student_available(id, x):
@@ -72,14 +69,12 @@ def generate_schedule():
             if check_student_available(id, x):
                 insert_schedule(id, 28, x)
 
-    print(get_schedules_student(20))
-
     generate_pdfs()
 
 
 # Generate PDF schedules
 def generate_pdfs():
-    for x in range(20):
+    for x in range(100):
         student = get_student(x)
         schedules = get_schedules_student(x)
         canvas = Canvas(f"export/{student['first']}_{x}.pdf")
