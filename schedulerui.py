@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog, QFrame
+
 from db import *
 
 
@@ -106,23 +107,23 @@ class Ui_MainWindow(object):
         self.tree_scroll_area.setWidgetResizable(True)
         self.tree_scroll_area.setObjectName("tree_scroll_area")
 
-        self.students_tree = QtWidgets.QTreeWidget(self.centralwidget)
-        self.students_tree.setColumnCount(2)
-        self.students_tree.setGeometry(QtCore.QRect(0, 20, 250, 680))
+        self.list_tree = QtWidgets.QTreeWidget(self.centralwidget)
+        self.list_tree.setColumnCount(2)
+        self.list_tree.setGeometry(QtCore.QRect(0, 20, 250, 680))
         self.tree_scroll_area_WidgetContents = QtWidgets.QWidget()
         self.tree_scroll_area_WidgetContents.setGeometry(QtCore.QRect(0, 20, 250, 679))
         self.tree_scroll_area_WidgetContents.setObjectName("tree_scroll_area_WidgetContents")
         self.tree_scroll_area.setWidget(self.tree_scroll_area_WidgetContents)
 
         self.tree_scroll_bar = QtWidgets.QScrollBar(self.tree_scroll_area_WidgetContents)
-        self.students_tree.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.list_tree.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.tree_scroll_area.setVerticalScrollBar(self.tree_scroll_bar)
         # self.students_tree = QtWidgets.QTreeWidget(self.tree_scroll_area_WidgetContents)
         self.tree_scroll_area.setWidget(self.tree_scroll_area_WidgetContents)
 
-        self.students_tree.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.students_tree.setObjectName("students_tree")
-        self.students_tree.setSortingEnabled(True)
+        self.list_tree.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.list_tree.setObjectName("students_tree")
+        self.list_tree.setSortingEnabled(True)
 
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
         self.frame_2.setGeometry(QtCore.QRect(260, 80, 372, 275))
@@ -427,16 +428,19 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        students_list = get_students()
-        self.populate_student_list(students_list)
+        # Set inital list on load
+        self.populate_student_list()
 
         self.hide_edit_elements()
         self.plusbutton.clicked.connect(self.enter_edit_mode)
         self.edit_button.clicked.connect(self.enter_edit_mode)
         self.ok_button.clicked.connect(self.exit_edit_mode)
         self.actionSettings.triggered.connect(self.open_colors_dialog)
-        self.students_tree.itemClicked.connect(lambda: self.show_student(search_by_id(self.students_tree.currentItem().text(1), students_list)))
-        self.students_tree.itemClicked.connect(lambda: print(self.students_tree.currentItem().text(1)))
+        self.actionStudents.triggered.connect(lambda: self.createFakeDataBase())
+        self.list_tree.itemClicked.connect(
+            lambda: self.search_by_id_tree_select(self.list_tree.currentItem().text(1)))
+        self.list_tree.itemClicked.connect(lambda: print(self.list_tree.currentItem().text(1)))
+        self.dropdown.activated.connect(lambda: self.update_dropdown())
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -452,11 +456,11 @@ class Ui_MainWindow(object):
         self.gpa.setText(_translate("MainWindow", "GPA: "))
         self.edit_button.setText(_translate("MainWindow", "..."))
 
-        self.students_tree.headerItem().setText(0, _translate("MainWindow", "Name"))
-        self.students_tree.headerItem().setText(1, _translate("MainWindow", "ID"))
-        __sortingEnabled = self.students_tree.isSortingEnabled()
-        self.students_tree.setSortingEnabled(False)
-        self.students_tree.setSortingEnabled(__sortingEnabled)
+        self.list_tree.headerItem().setText(0, _translate("MainWindow", "Name"))
+        self.list_tree.headerItem().setText(1, _translate("MainWindow", "ID"))
+        __sortingEnabled = self.list_tree.isSortingEnabled()
+        self.list_tree.setSortingEnabled(False)
+        self.list_tree.setSortingEnabled(__sortingEnabled)
 
         self.preferences.setText(_translate("MainWindow", "Course Preferences"))
         self.preference1.setText(_translate("MainWindow", "1. "))
@@ -728,17 +732,72 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(colors_dialog)
         colors_dialog.show()
 
+    # Do not Use Deprecated
     def show_student(self, student):
         self.name.setText("Name: " + student[1] + " " + student[2])
         self.id.setText("Student ID: " + str(student[0]))
         self.gpa.setText("GPA: " + str(student[3]))
+        raise Exception('Deprecated see search_by_id_tree_select')
 
-    def populate_student_list(self, students_list):
+    # Expensive call
+    def populate_student_list(self):
+        students_list = get_students()
+        self.list_tree.clear()
+
         for student in students_list:
-            print("student")
-            item_name = QtWidgets.QTreeWidgetItem(self.students_tree)
+            item_name = QtWidgets.QTreeWidgetItem(self.list_tree)
             item_name.setText(0, student[2] + ", " + student[1])
             item_name.setText(1, str(student[0]))
+
+    # Expensive call
+    def populate_course_list(self):
+        course_list = get_courses()
+        self.list_tree.clear()
+        for course in course_list:
+            item_name = QtWidgets.QTreeWidgetItem(self.list_tree)
+            item_name.setText(0, str(course['name']))
+            item_name.setText(1, str(course['course_id']))
+
+    def update_dropdown(self):
+        if self.dropdown.currentText() == "Courses":
+            self.populate_course_list()
+            return
+        if self.dropdown.currentText() == "Students":
+            self.populate_student_list()
+            return
+
+    def createFakeDataBase(self):
+        insert_test_students()
+        insert_test_courses()
+        insert_test_preferences()
+        self.populate_student_list()
+
+    # Search should also apply to teachers in future
+    def search_by_id_tree_select(self, id_request):
+        students_list = get_students()
+        course_list = get_courses()
+
+        if self.dropdown.currentText() == "Courses":
+            for course in course_list:
+                if course['course_id'] == int(id_request):
+                    self.name.setText("Name: " + str(course['name']))
+                    return
+
+        for student in students_list:
+            if student[0] == int(id_request):
+                self.name.setText("Name: " + student[1] + " " + student[2])
+                self.id.setText("Student ID: " + str(student[0]))
+                self.gpa.setText("GPA: " + str(student[3]))
+
+                qline = [self.preference1, self.preference2, self.preference3, self.preference4, self.preference5,
+                         self.preference6, self.preference6_2]
+
+                pref = get_preferences(student[0])
+
+                x = 0
+                for p in qline:
+                    qline[x].setText(str(x + 1) + '. ' + str(get_course(pref[x]['course_id'])[1]))
+                    x += 1
 
 
 def get_color_string(id):
@@ -760,9 +819,3 @@ def get_color_string(id):
     else:
         color_string += "rgb(0, 0, 0)"  # white
     return color_string
-
-
-def search_by_id(student_id, student_list):
-    for student in student_list:
-        if student[0] == int(student_id):
-            return student

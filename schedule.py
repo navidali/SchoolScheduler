@@ -1,10 +1,11 @@
-import json
-from db import *
 from reportlab.pdfgen.canvas import Canvas
+
+from db import *
+
 
 # assume that each class offering has the same id but can be multiple periods
 def generate_schedule():
-    #db.drop_schedules() # TODO: wipe schedule table
+    # db.drop_schedules() # TODO: wipe schedule table
     idx = 1
     while idx <= 7:
         # get all schedules
@@ -33,8 +34,3 @@ def generate_pdfs():
             sch_class = get_classes_id_period(sch['class_id'], sch['period'])
             canvas.drawString(72, y_pos, f"Period {sch['period']}: {sch_class['name']}")
         canvas.save()
-        
-                
-            
-            
-            
