@@ -123,7 +123,7 @@ class Ui_MainWindow(object):
         self.tree_scroll_area.setWidget(self.tree_scroll_area_WidgetContents)
 
         self.list_tree.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.list_tree.setObjectName("students_tree")
+        self.list_tree.setObjectName("list_tree")
         self.list_tree.setSortingEnabled(True)
 
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
@@ -628,7 +628,7 @@ class Ui_MainWindow(object):
         self.refresh_list()	
         
     def refresh_list(self):	
-        self.students_tree.clear()	
+        self.list_tree.clear()	
         students_list = get_students()	
         self.populate_student_list(students_list)
 
