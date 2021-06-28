@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QApplication
 
 import schedulerui
 from schedule import *
+from wsl import *
 
 
 class SchoolScheduler(QtWidgets.QMainWindow, schedulerui.Ui_MainWindow):
@@ -24,12 +25,14 @@ def start_gui():
 
 def main():
     # UI
+    set_display_to_host()
     start_gui()
 
 
 if __name__ == '__main__':
     # purge fixes fresh start up bug
-    db_purge()
+    # TODO REMOVE COMMENT OUT TO ALLOW PURGE
+    # db_purge()
 
     db_init()
     main()

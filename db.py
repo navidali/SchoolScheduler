@@ -64,7 +64,7 @@ def get_classes():
 
 
 # classes are defined sections of a course such that a course can have multiple sections
-def insert_class(student_id, class_name, period):
+def insert_class(course_id, class_name, period):
     cur.execute(f'INSERT INTO Classes VALUES ({student_id}, "{class_name}", {period})')
     con.commit()
 
@@ -85,9 +85,7 @@ def get_course(course_id):
 
 
 def get_schedules():
-    schedules = cur.execute("SELECT * FROM Schedules").fetchall()
-    for schedule in schedules:
-        print(dict(schedule))
+    return cur.execute("SELECT * FROM Schedules").fetchall()
 
 
 def get_schedules_student(student_id):
@@ -101,8 +99,12 @@ def insert_preference(course_id, student_id, period):
     con.commit()
 
 
-def get_preferences(student_id):
+def get_preference(student_id):
     return to_dict(cur.execute(f'SELECT * FROM Preferences WHERE student_id = {student_id}').fetchall())
+
+
+def get_preferences():
+    return to_dict(cur.execute(f'SELECT * FROM Preferences').fetchall())
 
 
 def get_preferences_period(period):
@@ -254,8 +256,12 @@ def insert_test_preferences():
             insert_preference(6, x, 1)
 
         # Math
-        r = random.randint(3, 4)
-        insert_preference(r, x, 2)
+        r = random.random()
+        if r < 0.95:
+            insert_preference(1, x, 2)
+        else:
+            r = random.randint(3, 4)
+            insert_preference(r, x, 2)
 
         # Science
         r = random.randint(10, 11)

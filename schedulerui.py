@@ -7,9 +7,10 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QDialog, QFrame
+from PyQt5.QtWidgets import QDialog
 
 from db import *
+from schedule import generate_schedule
 
 
 class Ui_MainWindow(object):
@@ -426,6 +427,8 @@ class Ui_MainWindow(object):
         self.ok_button.clicked.connect(self.exit_edit_mode)
         self.actionSettings.triggered.connect(self.open_colors_dialog)
         self.actionStudents.triggered.connect(lambda: self.createFakeDataBase())
+        # Change name refactor later TODO
+        self.actionImport_Teachers.triggered.connect(lambda: generate_schedule())
         self.list_tree.itemClicked.connect(
             lambda: self.search_by_id_tree_select(self.list_tree.currentItem().text(1)))
         self.list_tree.itemClicked.connect(lambda: print(self.list_tree.currentItem().text(1)))
@@ -798,7 +801,7 @@ class Ui_MainWindow(object):
                 qline = [self.preference1, self.preference2, self.preference3, self.preference4, self.preference5,
                          self.preference6, self.preference7]
 
-                pref = get_preferences(student[0])
+                pref = get_preference(student[0])
 
                 x = 0
                 for p in qline:
