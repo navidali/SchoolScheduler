@@ -594,10 +594,21 @@ class Ui_MainWindow(object):
         self.check_box_enabled(True)
 
     def enter_edit_mode(self):
-        self.clear_edit_fields()
+
         if self.name_edit.isHidden():
+            if self.name.text() != "Name: ":
+                self.set_edit_elements()
+                delete_student(int(self.id.text().split(' ')[2]))
+                self.clear_shown_student()
             self.show_edit_elements()
             self.check_box_enabled(True)
+
+    def set_edit_elements(self):
+        self.name_edit.setText(self.name.text().split(" ")[1] + " " + self.name.text().split(" ")[2])
+        self.id_edit.setText(self.id.text().split(" ")[1])
+        self.grade_edit.setText(self.grade.text().split(" ")[1])
+        self.credits_edit.setText(self.num_credits.text().split(" ")[1])
+        self.gpa_edit.setText(self.gpa.text().split(" ")[1])
 
     def clear_shown_student(self):
         self.name.setText("Name: ")
@@ -619,18 +630,18 @@ class Ui_MainWindow(object):
         self.clear_edit_fields()
         self.hide_edit_elements()
         self.check_box_enabled(False)
-           		
-    def create_new_student(self):	
-        name = self.name_edit.text()	
-        first_last = name.split(" ", 2)	
-        insert_student(self.id_edit.text(), first_last[0], first_last[1], self.grade_edit.text())	
-        self.clear_edit_fields()	
-        self.refresh_list()	
-        
+
+    def create_new_student(self):
+        name = self.name_edit.text()
+        first_last = name.split(" ", 2)
+        insert_student(int(self.id_edit.text()), first_last[0], first_last[1], float(self.gpa_edit.text()))
+        self.clear_edit_fields()
+        self.refresh_list()
+
     def refresh_list(self):
-        self.students_tree.clear()
-        students_list = get_students()	
-        self.populate_student_list(students_list)
+        self.list_tree.clear()
+        students_list = get_students()
+        self.populate_student_list()
 
     def set_color_1(self, id):
         color = get_color_string(id)
@@ -824,6 +835,7 @@ class Ui_MainWindow(object):
                 pref = get_preference(student[0])
 
                 x = 0
+                
                 for p in qline:
                     qline[x].setText(str(x + 1) + '. ' + str(get_course(pref[x]['course_id'])[1]))
                     x += 1
