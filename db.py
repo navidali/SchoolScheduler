@@ -141,6 +141,16 @@ def check_student_available(student_id, period):
     return False
 
 
+def insert_class_history(student_id, name, credit, grade):
+    cur.execute(f'INSERT INTO Class_History VALUES ({student_id}, "{name}", {credit}, "{grade}")')
+    con.commit()
+
+
+def get_class_history(student_id):
+    classes = cur.execute(f"SELECT * FROM Class_History WHERE student_id = {student_id}").fetchall()
+    return classes
+
+
 def insert_test_students():
     # (id, first, last, GPA)
     words = open('words.txt', 'r')
@@ -331,3 +341,18 @@ def insert_test_preferences():
 
         # Study Hall
         insert_preference(28, x, 7)
+
+def insert_test_coursework():
+    #student_id, name, credit, grade
+    classes = ["Algebra 1", "Geometry", "ELA 1", "Biology 1", "World History", "Economics", "Elective 1", "ART 1", "Study Hall"]
+    grade = ["A", "B", "C", "D"]
+    for student in get_students():
+        r1 = random.randint(0, 8)
+        r2 = random.randint(0, 3)
+        insert_class_history(student['id'], classes[r1], 3, grade[r2])
+        r1 = random.randint(0, 8)
+        r2 = random.randint(0, 3)
+        insert_class_history(student['id'], classes[r1], 3, grade[r2])
+        r1 = random.randint(0, 8)
+        r2 = random.randint(0, 3)
+        insert_class_history(student['id'], classes[r1], 3, grade[r2])
