@@ -798,6 +798,7 @@ class Ui_MainWindow(object):
         insert_test_students()
         insert_test_courses()
         insert_test_preferences()
+        insert_test_coursework()
         self.populate_student_list()
 
     # Search should also apply to teachers in future

@@ -18,6 +18,7 @@ def db_init():
 
     # Note that Preference period is almost meaningless and is simply here for indexing in UI
     cur.execute('''CREATE TABLE IF NOT EXISTS Preferences (course_id integer, student_id integer, period integer)''')
+    cur.execute('''CREATE TABLE IF NOT EXISTS Class_History (student_id integer, class text, credit real, grade text)''')
     con.commit()
 
 
@@ -27,6 +28,7 @@ def db_purge():
     cur.execute('''DROP TABLE IF EXISTS Courses''')
     cur.execute('''DROP TABLE IF EXISTS Schedules''')
     cur.execute('''DROP TABLE IF EXISTS Preferences''')
+    cur.execute('''DROP TABLE IF EXISTS Class_History''')
     con.commit()
 
 
@@ -56,6 +58,18 @@ def get_courses():
 def insert_student(student_id, f_name, l_name, grade):
     cur.execute(f'INSERT INTO Students VALUES ({student_id},"{f_name}", "{l_name}", {grade})')
     con.commit()
+
+
+# only handles id, name, and grade as of now
+def edit_student(student_id, new_id, f_name, l_name, grade):
+    cur.execute("UPDATE Students SET id=?, first=?, last=?, gpa=? WHERE id=?", (new_id, f_name, l_name, grade, student_id))
+    con.commit()
+
+
+# deletes student and coursework
+def delete_student(student_id):
+    cur.execute(f"DELETE FROM Students WHERE id = {student_id}")
+    cur.execute(f"DELETE FROM Class_History WHERE student_id = {student_id}")
 
 
 def get_classes():
@@ -139,6 +153,16 @@ def check_student_available(student_id, period):
     if num_in_period == 0:
         return True
     return False
+
+
+def insert_class_history(student_id, name, credit, grade):
+    cur.execute(f'INSERT INTO Class_History VALUES ({student_id}, "{name}", {credit}, "{grade}")')
+    con.commit()
+
+
+def get_class_history(student_id):
+    classes = cur.execute(f"SELECT * FROM Class_History WHERE student_id = {student_id}").fetchall()
+    return classes
 
 
 def insert_class_history(student_id, name, credit, grade):
@@ -341,6 +365,7 @@ def insert_test_preferences():
 
         # Study Hall
         insert_preference(28, x, 7)
+
 
 def insert_test_coursework():
     #student_id, name, credit, grade
