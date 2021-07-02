@@ -67,7 +67,7 @@ def generate_schedule():
         # Check for empty slots in schedule
         for x in range(1, 8):
             if check_student_available(id, x):
-                insert_schedule(id, 28, x)
+                insert_schedule(course_available(28, x, id), 28, x)
 
     generate_pdfs()
 
