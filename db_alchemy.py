@@ -43,7 +43,7 @@ class Student(Base):
     @staticmethod
     def available(student_id, period):
         num_in_period = \
-            session.execute(session.query(func.count(Schedule.id)).where(student_id == student_id).where(period == period)).scalar()
+            session.execute(session.query(func.count(Schedule.id)).where(Schedule.student_id == student_id).where(Schedule.period == period)).scalar()
         if num_in_period == 0:
                 return True
         return False
@@ -67,7 +67,7 @@ class Class(Base):
 
     @staticmethod
     def get_name(id):
-        query = session.query(Course).where(id == Class.by_id(id).course_id)
+        query = session.query(Course).where(Class.id == Class.by_id(id).course_id)
         return session.execute(query).scalar().name
 
     @staticmethod
@@ -99,9 +99,9 @@ class Course(Base):
 
     @staticmethod
     def available(id, period, student_id):
-        classes = session.execute(session.query(Class).where(id == id).where(period == period)).scalars().all()
+        classes = session.execute(session.query(Class).where(Class.id == id).where(Class.period == period)).scalars().all()
         for c in classes:
-            count =  session.execute(session.query(func.count(Schedule.id)).where(Schedule.class_id == c.id).where(period == period)).scalar()
+            count =  session.execute(session.query(func.count(Schedule.id)).where(Schedule.class_id == c.id).where(Schedule.period == period)).scalar()
             if count < 15:
                 return c.id
         return -1
@@ -150,7 +150,7 @@ class Preference(Base):
 
     @staticmethod
     def by_student_id(student_id):
-        query = session.query(Preference).where(student_id == student_id)
+        query = session.query(Preference).where(Preference.student_id == student_id)
         return session.execute(query).scalars().all()
 
     @staticmethod
@@ -174,7 +174,7 @@ class Class_History(Base):
 
     @staticmethod
     def by_student_id(student_id):
-        query = session.query(Class_History).where(student_id == student_id)
+        query = session.query(Class_History).where(Class_History.student_id == student_id)
         return session.execute(query).scalars().all()
 
 
@@ -268,7 +268,6 @@ def insert_test_courses():
 
 def insert_test_preferences():
     # Assume 1000 students with decreasing number count thru 9 to 12th greade
-
     # Note that Preference period is almost meaningless and is simply here for indexing in UI
     for x in range(0, 349):
         # ELA 9th grade everyone takes
@@ -408,6 +407,7 @@ def insert_test_preferences():
         # Study Hall
         Preference.insert(28, x, 7)
     session.commit()
+
 
 def insert_test_coursework():
     #student_id, name, credit, grade

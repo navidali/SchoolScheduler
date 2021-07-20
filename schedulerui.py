@@ -598,7 +598,7 @@ class Ui_MainWindow(object):
         if self.name_edit.isHidden():
             if self.name.text() != "Name: ":
                 self.set_edit_elements()
-                delete_student(int(self.id.text().split(' ')[2]))
+                session.delete(Student.by_id(int(self.id.text().split(' ')[2])))
                 self.clear_shown_student()
             self.show_edit_elements()
             self.check_box_enabled(True)
@@ -837,7 +837,8 @@ class Ui_MainWindow(object):
                 x = 0
                 
                 for p in qline:
-                    qline[x].setText(str(x + 1) + '. ' + str(Course.by_id(pref[x].course_id).name))
+                    course_id = pref[x].course_id
+                    qline[x].setText(str(x + 1) + '. ' + str(Course.by_id(course_id).name))
                     x += 1
 
                 classes = Class_History.by_student_id(student.id)
