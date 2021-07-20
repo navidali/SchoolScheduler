@@ -2,7 +2,7 @@ import math
 
 from reportlab.pdfgen.canvas import Canvas
 
-from db import *
+from db_alchemy import *
 
 
 # assume that each class offering has the same id but can be multiple periods
@@ -23,13 +23,13 @@ def generate_schedule():
 
     # Computer Min Required Class to reduce searchable zone for valid schedules
 
-    pref = get_preferences()
+    pref = Preference.get_all()
     course_freq = {}
     for item in pref:
-        if (item['course_id'] in course_freq):
-            course_freq[item['course_id']] += 1
+        if (item.course_id in course_freq):
+            course_freq[item.course_id] += 1
         else:
-            course_freq[item['course_id']] = 1
+            course_freq[item.course_id] = 1
 
     print(course_freq)
 
@@ -48,7 +48,7 @@ def generate_schedule():
 
         # Creates an even distribution of classes for a given course over the 7 periods
         for x in range(1, num_classes + 1):
-            insert_class(class_id, item, (x % 7) + 1)
+            Class.insert(class_id, item, (x % 7) + 1)
             class_id += 1
 
     # generate_pdfs()
@@ -57,17 +57,17 @@ def generate_schedule():
 
     for id in range(100):
 
-        pref = get_preference(id)
+        pref = Preference.by_student_id(id)
         for p in pref:
             for x in range(1, 8):
-                class_id_search = course_available(p['course_id'], x, id)
-                if not class_id_search == -1 and check_student_available(id, x):
-                    insert_schedule(id, class_id_search, x)
+                class_id_search = Course.available(p['course_id'], x, id)
+                if not class_id_search == -1 and Student.available(id, x):
+                    Schedule.insert(id, class_id_search, x)
                     break
         # Check for empty slots in schedule
         for x in range(1, 8):
-            if check_student_available(id, x):
-                insert_schedule(course_available(28, x, id), 28, x)
+            if Student.available(id, x):
+                Schedule.insert(Course.available(28, x, id), 28, x)
 
     generate_pdfs()
 
@@ -75,15 +75,15 @@ def generate_schedule():
 # Generate PDF schedules
 def generate_pdfs():
     for x in range(100):
-        student = get_student(x)
-        schedules = get_schedules_student(x)
-        canvas = Canvas(f"export/{student['first']}_{x}.pdf")
+        student = Student.by_id(x)
+        schedules = Schedule.by_student_id(x)
+        canvas = Canvas(f"export/{student.first}_{x}.pdf")
         y_pos = 720
 
-        canvas.drawString(72, y_pos, f"{student['first']} {student['last']}")
-        canvas.drawString(396, y_pos, f"Student Id: {student['id']}")
+        canvas.drawString(72, y_pos, f"{student.first} {student.last}")
+        canvas.drawString(396, y_pos, f"Student Id: {student.id}")
         for sch in schedules:
             y_pos = y_pos - 36
-            sch_class = get_class_name(sch['class_id'])
-            canvas.drawString(72, y_pos, f"Period {sch['period']}: {sch_class['name']}")
+            sch_class = Class.get_name(sch.class_id)
+            canvas.drawString(72, y_pos, f"Period {sch.period}: {sch_class.name}")
         canvas.save()

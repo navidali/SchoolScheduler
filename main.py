@@ -14,8 +14,6 @@ class SchoolScheduler(QtWidgets.QMainWindow, schedulerui.Ui_MainWindow):
         self.setupUi(self)
 
 
-
-
 def start_gui():
     app = QApplication(sys.argv)
     form = SchoolScheduler()
