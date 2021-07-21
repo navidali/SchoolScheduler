@@ -9,7 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog
 
-from db import *
+from db_alchemy import *
 from schedule import generate_schedule
 
 
@@ -598,7 +598,7 @@ class Ui_MainWindow(object):
         if self.name_edit.isHidden():
             if self.name.text() != "Name: ":
                 self.set_edit_elements()
-                delete_student(int(self.id.text().split(' ')[2]))
+                session.delete(Student.by_id(int(self.id.text().split(' ')[2])))
                 self.clear_shown_student()
             self.show_edit_elements()
             self.check_box_enabled(True)
@@ -634,13 +634,13 @@ class Ui_MainWindow(object):
     def create_new_student(self):
         name = self.name_edit.text()
         first_last = name.split(" ", 2)
-        insert_student(int(self.id_edit.text()), first_last[0], first_last[1], float(self.gpa_edit.text()))
+        Student.insert(int(self.id_edit.text()), first_last[0], first_last[1], float(self.gpa_edit.text()))
         self.clear_edit_fields()
         self.refresh_list()
 
     def refresh_list(self):
         self.list_tree.clear()
-        students_list = get_students()
+        students_list = Student.get_all()
         self.populate_student_list()
 
     def set_color_1(self, id):
@@ -773,29 +773,29 @@ class Ui_MainWindow(object):
 
     # Do not Use Deprecated
     def show_student(self, student):
-        self.name.setText("Name: " + student[1] + " " + student[2])
-        self.id.setText("ID: " + str(student[0]))
-        self.gpa.setText("GPA: " + str(student[3]))
+        self.name.setText("Name: " + student.first + " " + student.last)
+        self.id.setText("ID: " + str(student.id))
+        self.gpa.setText("GPA: " + str(student.gpa))
         raise Exception('Deprecated see search_by_id_tree_select')
 
     # Expensive call
     def populate_student_list(self):
-        students_list = get_students()
+        students_list = Student.get_all()
         self.list_tree.clear()
 
         for student in students_list:
             item_name = QtWidgets.QTreeWidgetItem(self.list_tree)
-            item_name.setText(0, student[2] + ", " + student[1])
-            item_name.setText(1, str(student[0]))
+            item_name.setText(0, student.last + ", " + student.first)
+            item_name.setText(1, str(student.id))
 
     # Expensive call
     def populate_course_list(self):
-        course_list = get_courses()
+        course_list = Course.get_all()
         self.list_tree.clear()
         for course in course_list:
             item_name = QtWidgets.QTreeWidgetItem(self.list_tree)
-            item_name.setText(0, str(course['name']))
-            item_name.setText(1, str(course['course_id']))
+            item_name.setText(0, str(course.name))
+            item_name.setText(1, str(course.course_id))
 
     def update_dropdown(self):
         if self.dropdown.currentText() == "Courses":
@@ -814,38 +814,39 @@ class Ui_MainWindow(object):
 
     # Search should also apply to teachers in future
     def search_by_id_tree_select(self, id_request):
-        students_list = get_students()
-        course_list = get_courses()
+        students_list = Student.get_all()
+        course_list = Course.get_all()
 
         if self.dropdown.currentText() == "Courses":
             for course in course_list:
-                if course['course_id'] == int(id_request):
-                    self.name.setText("Name: " + str(course['name']))
+                if course.course_id == int(id_request):
+                    self.name.setText("Name: " + str(course.name))
                     return
 
         for student in students_list:
-            if student[0] == int(id_request):
-                self.name.setText("Name: " + student[1] + " " + student[2])
-                self.id.setText("Student ID: " + str(student[0]))
-                self.gpa.setText("GPA: " + str(student[3]))
+            if student.id == int(id_request):
+                self.name.setText("Name: " + student.first + " " + student.last)
+                self.id.setText("Student ID: " + str(student.id))
+                self.gpa.setText("GPA: " + str(student.gpa))
 
                 qline = [self.preference1, self.preference2, self.preference3, self.preference4, self.preference5,
                          self.preference6, self.preference7]
 
-                pref = get_preference(student[0])
+                pref = Preference.by_student_id(student.id)
 
                 x = 0
                 
                 for p in qline:
-                    qline[x].setText(str(x + 1) + '. ' + str(get_course(pref[x]['course_id'])[1]))
+                    course_id = pref[x].course_id
+                    qline[x].setText(str(x + 1) + '. ' + str(Course.by_id(course_id).name))
                     x += 1
 
-                classes = get_class_history(student[0])
+                classes = Class_History.by_student_id(student.id)
                 index = 0
                 for c in classes:
-                    self.tableWidget.setItem(index, 0, QtWidgets.QTableWidgetItem(c['class']))
-                    self.tableWidget.setItem(index, 1, QtWidgets.QTableWidgetItem(str(c['credit'])))
-                    self.tableWidget.setItem(index, 2, QtWidgets.QTableWidgetItem(str(c['grade'])))
+                    self.tableWidget.setItem(index, 0, QtWidgets.QTableWidgetItem(c.class_name))
+                    self.tableWidget.setItem(index, 1, QtWidgets.QTableWidgetItem(str(c.credit)))
+                    self.tableWidget.setItem(index, 2, QtWidgets.QTableWidgetItem(str(c.grade)))
                     index += 1
 
 

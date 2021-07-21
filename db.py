@@ -42,96 +42,97 @@ def to_dict(query_out):
         dict_arr.append(dict(i))
     return dict_arr
 
-
+#Students.get_all()
 def get_students():
     return cur.execute("SELECT * FROM Students").fetchall()
 
-
+#Students.by_id()
 def get_student(student_id):
     return dict(cur.execute(f"SELECT * FROM Students WHERE id = {student_id}").fetchone())
 
-
+#Course.get_all()
 def get_courses():
     return to_dict(cur.execute("SELECT * FROM Courses").fetchall())
 
-
+#Student.insert(...)
 def insert_student(student_id, f_name, l_name, grade):
     cur.execute(f'INSERT INTO Students VALUES ({student_id},"{f_name}", "{l_name}", {grade})')
     con.commit()
 
-
+# just modify the student instance
 # only handles id, name, and grade as of now
 def edit_student(student_id, new_id, f_name, l_name, grade):
     cur.execute("UPDATE Students SET id=?, first=?, last=?, gpa=? WHERE id=?", (new_id, f_name, l_name, grade, student_id))
     con.commit()
 
-
+# Student.delete()
 # deletes student and coursework
 def delete_student(student_id):
     cur.execute(f"DELETE FROM Students WHERE id = {student_id}")
     cur.execute(f"DELETE FROM Class_History WHERE student_id = {student_id}")
 
-
+# Class.get_all()
 def get_classes():
     classes = cur.execute("SELECT * FROM Classes").fetchall()
     for c in classes:
         print(dict(c))
     return classes
 
-
+# Class.get_name()
 def get_class_name(class_id):
     course_id = dict(cur.execute(f"SELECT * FROM Classes WHERE class_id = {class_id}").fetchone())
     return dict(cur.execute(f"SELECT * FROM Courses WHERE course_id = {course_id['course_id']}").fetchone())
 
+#Class.insert()
 # classes are defined sections of a course such that a course can have multiple sections
 def insert_class(class_id, course_id, period):
     cur.execute(f'INSERT INTO Classes VALUES ({class_id},{course_id}, {period})')
     con.commit()
 
-
+#Schedule.insert()
 def insert_schedule(student_id, class_id, period):
     cur.execute(f'INSERT INTO Schedules VALUES ({student_id}, {class_id}, {period})')
     con.commit()
 
-
+#Course.insert()
 # courses are those that a school offers
 def insert_course(course_id, course_name, course_type, capacity=15):
     cur.execute(f'INSERT INTO COURSES VALUES ({course_id}, "{course_name}", "{course_type}", {capacity})')
     con.commit()
 
-
+#Course.by_id(id)
 def get_course(course_id):
     return cur.execute(f'SELECT * FROM Courses WHERE course_id = {course_id}').fetchone()
 
-
+#Schedule.get_all()
 def get_schedules():
     return cur.execute("SELECT * FROM Schedules").fetchall()
 
-
+#Schedule.by_student_id(student)
 def get_schedules_student(student_id):
     schedules = cur.execute(f"SELECT * FROM Schedules WHERE user_id = {student_id}").fetchall()
     return to_dict(schedules)
 
-
+#Preference.insert(...)
 # Note that Preference period is almost meaningless and is simply here for indexing in UI
 def insert_preference(course_id, student_id, period):
     cur.execute(f'INSERT INTO Preferences VALUES ({course_id}, {student_id}, {period})')
     con.commit()
 
-
+#Preference.by_id()
 def get_preference(student_id):
     return to_dict(cur.execute(f'SELECT * FROM Preferences WHERE student_id = {student_id}').fetchall())
 
-
+#Preference.get_all()
 def get_preferences():
     return to_dict(cur.execute(f'SELECT * FROM Preferences').fetchall())
 
-
+#Preferences.by_period
 def get_preferences_period(period):
     preferences = cur.execute(f"SELECT * FROM Preferences WHERE period = {period}").fetchall()
     return to_dict(preferences)
 
-
+# Course.available(...)
 # TEMP IF COURSE NOT AVAIBLE WE RETURN STUDY HALL
 def course_available(course_id, period, student_id):
     classes = cur.execute(f'SELECT * FROM Classes WHERE course_id = {course_id} AND period = {period}').fetchall()
@@ -145,7 +146,7 @@ def course_available(course_id, period, student_id):
 
     return -1
 
-
+#Student.available(...)
 # check if a student has a class during a period
 def check_student_available(student_id, period):
     num_in_period = \
@@ -154,22 +155,22 @@ def check_student_available(student_id, period):
         return True
     return False
 
-
+#Class_History.insert(...)
 def insert_class_history(student_id, name, credit, grade):
     cur.execute(f'INSERT INTO Class_History VALUES ({student_id}, "{name}", {credit}, "{grade}")')
     con.commit()
 
-
+#Class_History.by_student_id(student_id)
 def get_class_history(student_id):
     classes = cur.execute(f"SELECT * FROM Class_History WHERE student_id = {student_id}").fetchall()
     return classes
 
-
+#Dupe function?
 def insert_class_history(student_id, name, credit, grade):
     cur.execute(f'INSERT INTO Class_History VALUES ({student_id}, "{name}", {credit}, "{grade}")')
     con.commit()
 
-
+#another dupe function?
 def get_class_history(student_id):
     classes = cur.execute(f"SELECT * FROM Class_History WHERE student_id = {student_id}").fetchall()
     return classes
