@@ -608,8 +608,15 @@ class Ui_MainWindow(object):
         self.name_edit.setText(self.name.text().split(" ")[1] + " " + self.name.text().split(" ")[2])
         self.id_edit.setText(self.id.text().split(" ")[1])
         self.grade_edit.setText(self.grade.text().split(" ")[1])
-        self.credits_edit.setText(self.num_credits.text().split(" ")[1])
+        self.credits_edit.setText(self.num_credits.text().split(" ")[1]) # should be 2 but credits are not being set
         self.gpa_edit.setText(self.gpa.text().split(" ")[1])
+        self.pref1edit.setText(self.preference1.text().split(" ")[1])
+        self.pref2edit.setText(self.preference2.text().split(" ")[1])
+        self.pref3edit.setText(self.preference3.text().split(" ")[1])
+        self.pref4edit.setText(self.preference4.text().split(" ")[1])
+        self.pref5edit.setText(self.preference5.text().split(" ")[1])
+        self.pref6edit.setText(self.preference6.text().split(" ")[1])
+        self.pref7edit.setText(self.preference7.text().split(" ")[1])
 
     def clear_shown_student(self):
         self.name.setText("Name: ")
@@ -624,6 +631,13 @@ class Ui_MainWindow(object):
         self.grade_edit.setText("")
         self.gpa_edit.setText("")
         self.credits_edit.setText("")
+        self.pref1edit.setText("")
+        self.pref2edit.setText("")
+        self.pref3edit.setText("")
+        self.pref4edit.setText("")
+        self.pref5edit.setText("")
+        self.pref6edit.setText("")
+        self.pref7edit.setText("")
 
     def exit_edit_mode(self):
         if self.name_edit.text() != "":
