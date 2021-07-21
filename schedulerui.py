@@ -426,7 +426,8 @@ class Ui_MainWindow(object):
         self.edit_button.clicked.connect(self.enter_edit_mode)
         self.ok_button.clicked.connect(self.exit_edit_mode)
         self.actionSettings.triggered.connect(self.open_colors_dialog)
-        self.actionStudents.triggered.connect(lambda: self.createFakeDataBase())
+        self.actionStudents.triggered.connect(self.open_input_dialog)
+        # called in close input dialog, self.actionStudents.triggered.connect(lambda: self.createFakeDataBase())
         # Change name refactor later TODO
         self.actionImport_Teachers.triggered.connect(lambda: generate_schedule())
         self.list_tree.itemClicked.connect(
@@ -770,7 +771,30 @@ class Ui_MainWindow(object):
         self.buttonBox.rejected.connect(colors_dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(colors_dialog)
         colors_dialog.show()
-
+        
+    def open_input_dialog(self):
+        import_dialog = QDialog(self)
+        import_dialog.setObjectName("Dialog")
+        import_dialog.resize(400, 193)
+        self.buttonBox = QtWidgets.QDialogButtonBox(import_dialog)
+        self.buttonBox.setGeometry(QtCore.QRect(31, 140, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.label = QtWidgets.QLabel(import_dialog)
+        self.label.setGeometry(QtCore.QRect(28, 28, 331, 16))
+        self.label.setObjectName("label")
+        self.lineEdit = QtWidgets.QLineEdit(import_dialog)
+        self.lineEdit.setGeometry(QtCore.QRect(28, 72, 291, 23))
+        self.lineEdit.setObjectName("lineEdit")
+        import_dialog.setWindowTitle("Dialog")
+        self.label.setText("Enter the location of the file you wish to import:")
+        self.buttonBox.accepted.connect(self.createFakeDataBase)
+        self.buttonBox.accepted.connect(import_dialog.accept)
+        self.buttonBox.rejected.connect(import_dialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(import_dialog)
+        import_dialog.show()
+        
     # Do not Use Deprecated
     def show_student(self, student):
         self.name.setText("Name: " + student.first + " " + student.last)
