@@ -5,14 +5,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import random
 
-
 Base = declarative_base()
 engine = create_engine('sqlite:///SchoolScheduler.db')
 
-#drop and recreate all tables
+# drop and recreate all tables
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
 
 class Student(Base):
     __tablename__ = 'Student'
@@ -43,9 +43,10 @@ class Student(Base):
     @staticmethod
     def available(student_id, period):
         num_in_period = \
-            session.execute(session.query(func.count(Schedule.id)).where(Schedule.student_id == student_id).where(Schedule.period == period)).scalar()
+            session.execute(session.query(func.count(Schedule.id)).where(Schedule.student_id == student_id).where(
+                Schedule.period == period)).scalar()
         if num_in_period == 0:
-                return True
+            return True
         return False
 
 
@@ -75,6 +76,7 @@ class Class(Base):
         session.add(Class(id=id, course_id=course_id, period=period))
         session.commit()
 
+
 class Course(Base):
     __tablename__ = 'Course'
     id = id = Column(Integer, primary_key=True)
@@ -99,9 +101,11 @@ class Course(Base):
 
     @staticmethod
     def available(id, period, student_id):
-        classes = session.execute(session.query(Class).where(Class.id == id).where(Class.period == period)).scalars().all()
+        classes = session.execute(
+            session.query(Class).where(Class.id == id).where(Class.period == period)).scalars().all()
         for c in classes:
-            count =  session.execute(session.query(func.count(Schedule.id)).where(Schedule.class_id == c.id).where(Schedule.period == period)).scalar()
+            count = session.execute(session.query(func.count(Schedule.id)).where(Schedule.class_id == c.id).where(
+                Schedule.period == period)).scalar()
             if count < 15:
                 return c.id
         return -1
@@ -130,6 +134,7 @@ class Schedule(Base):
         query = session.query(Schedule).where(Schedule.student_id == student_id)
         return session.execute(query).scalar()
 
+
 class Preference(Base):
     __tablename__ = "Preference"
 
@@ -146,7 +151,6 @@ class Preference(Base):
     @staticmethod
     def insert(course_id, student_id, period):
         session.add(Preference(course_id=course_id, student_id=student_id, period=period))
-
 
     @staticmethod
     def by_student_id(student_id):
@@ -226,6 +230,7 @@ def insert_test_students():
         Student.insert(x, lines[random.randint(0, 10000)], lines[random.randint(0, 10000)], 4)
     session.commit()
 
+
 def insert_test_courses():
     # (name, type)
 
@@ -269,6 +274,7 @@ def insert_test_courses():
 def insert_test_preferences():
     # Assume 1000 students with decreasing number count thru 9 to 12th greade
     # Note that Preference period is almost meaningless and is simply here for indexing in UI
+    # insert(course_id, student_id, period):
     for x in range(0, 349):
         # ELA 9th grade everyone takes
         Preference.insert(5, x, 1)
@@ -410,17 +416,186 @@ def insert_test_preferences():
 
 
 def insert_test_coursework():
-    #student_id, name, credit, grade
-    classes = ["Algebra 1", "Geometry", "ELA 1", "Biology 1", "World History", "Economics", "Elective 1", "ART 1", "Study Hall"]
-    grade = ["A", "B", "C", "D"]
-    for student in Student.get_all():
-        r1 = random.randint(0, 8)
-        r2 = random.randint(0, 3)
-        Class_History.insert(student.id, classes[r1], 3, grade[r2])
-        r1 = random.randint(0, 8)
-        r2 = random.randint(0, 3)
-        Class_History.insert(student.id, classes[r1], 3, grade[r2])
-        r1 = random.randint(0, 8)
-        r2 = random.randint(0, 3)
-        Class_History.insert(student.id, classes[r1], 3, grade[r2])
-        session.commit()
+    # student_id, name, credit, grade
+    courses = [['Algebra 1', 'MATH'],
+               ['Algebra 2', 'MATH'],
+               ['Geometry', 'MATH'],
+               ['ADV MATH 1', 'MATH'],
+               ['ADV MATH 2', 'MATH'],
+               ['ELA 1', 'ELA'],
+               ['ELA 2', 'ELA'],
+               ['ELA 3', 'ELA'],
+               ['ELA 4', 'ELA'],
+               ['Biology 1', 'SCIENCE'],
+               ['Science Class 1', 'SCIENCE'],
+               ['Science Class 2', 'SCIENCE'],
+               ['World History', 'SOCIAL'],
+               ['U.S. History', 'SOCIAL'],
+               ['U.S. Government', 'SOCIAL'],
+               ['Economics', 'SOCIAL'],
+               ['Physical Education', 'HEALTH'],
+               ['Elective 1', 'ELECTIVE'],
+               ['Elective 2', 'ELECTIVE'],
+               ['Elective 3', 'ELECTIVE'],
+               ['Elective 4', 'ELECTIVE'],
+               ['Elective 5', 'ELECTIVE'],
+               ['Elective 6', 'ELECTIVE'],
+               ['Elective 7', 'ELECTIVE'],
+               ['Elective 8', 'ELECTIVE'],
+               ['ART 1', 'FINEART'],
+               ['ART 2', 'FINEART'],
+               ['ART 3', 'FINEART'],
+               ['Study Hall', 'FREE']
+               ]
+
+    for x in range(350, 999):
+        Class_History.insert(x, courses[5][0], 3, get_grade())
+        r = random.random()
+        if (r < 0.9):
+            Class_History.insert(x, courses[0][0], 3, get_grade())
+        else:
+            Class_History.insert(x, courses[2][0], 3, get_grade())
+
+        Class_History.insert(x, courses[9][0], 3, get_grade())
+
+        r = random.random()
+        if (r < 0.95):
+            Class_History.insert(x, courses[12][0], 3, get_grade())
+        else:
+            Class_History.insert(x, courses[13][0], 3, get_grade())
+
+        r = random.randint(17, 24)
+        Class_History.insert(x, courses[r][0], 1, get_grade())
+
+        Class_History.insert(x, courses[16][0], 3, get_grade())
+
+        Class_History.insert(x, courses[28][0], 1, get_grade())
+
+        if x in range(650, 900):
+            failed = classes_failed(x)
+            classes = Class_History.by_student_id(x)
+
+            if "ELA 1" in failed:
+                Class_History.insert(x, courses[5][0], 3, get_grade())
+            else:
+                Class_History.insert(x, courses[6][0], 3, get_grade())
+
+            # Math
+            r = random.random()
+            if "Algebra 1" in failed:
+                Class_History.insert(x, courses[0][0], 3, get_grade())
+            elif "Geometry" in failed:
+                Class_History.insert(x, courses[2][0], 3, get_grade())
+            else:
+                if [y for y in classes if y.class_name == "Algebra 1"]:
+                    if r < 0.9:
+                        Class_History.insert(x, courses[2][0], 3, get_grade())
+                    else:
+                        Class_History.insert(x, courses[1][0], 3, get_grade())
+                elif [y for y in classes if y.class_name == "Geometry"]:
+                    Class_History.insert(x, courses[0][0], 3, get_grade())
+
+            # Science
+            if "Biology 1" in failed:
+                Class_History.insert(x, courses[9][0], 3, get_grade())
+            else:
+                r = random.randint(10, 11)
+                Class_History.insert(x, courses[r][0], 3, get_grade())
+
+            # Social
+            if "World History" in failed:
+                Class_History.insert(x, courses[12][0], 3, get_grade())
+            elif "U.S. History" in failed:
+                Class_History.insert(x, courses[13][0], 3, get_grade())
+            else:
+                if [y for y in classes if y.class_name == "World History"]:
+                    r = random.random()
+                    if r < 0.95:
+                        Class_History.insert(x, courses[13][0], 3, get_grade())
+                    else:
+                        Class_History.insert(x, courses[14][0], 3, get_grade())
+                else:
+                    Class_History.insert(x, courses[14][0], 3, get_grade())
+
+            # Elective
+            r = random.randint(17, 20)
+            Class_History.insert(x, courses[r][0], 3, get_grade())
+
+            r = random.randint(21, 27)
+            Class_History.insert(x, courses[r][0], 3, get_grade())
+
+            # Study Hall
+            Class_History.insert(x, courses[28][0], 3, get_grade())
+
+        elif x in range(900, 999):
+            failed = classes_failed(x)
+            classes = Class_History.by_student_id(x)
+
+            if "ELA 2" in failed:
+                Class_History.insert(x, courses[6][0], 3, get_grade())
+            else:
+                Class_History.insert(x, courses[7][0], 3, get_grade())
+
+            # Math
+            if "Algebra 2" in failed or [y for y in classes if y.class_name != "Algebra 2"]:
+                Class_History.insert(x, courses[1][0], 3, get_grade())
+            else:
+                r = random.randint(3, 4)
+                Class_History.insert(x, courses[r][0], 3, get_grade())
+
+            # Science
+            if "Biology 1" in failed:
+                Class_History.insert(x, courses[9][0], 3, get_grade())
+            elif "Science Class 1" in failed:
+                Class_History.insert(x, courses[10][0], 3, get_grade())
+            elif "Science Class 2" in failed:
+                Class_History.insert(x, courses[11][0], 3, get_grade())
+            else:
+                if [y for y in classes if y.class_name == "Science Class 1"]:
+                    Class_History.insert(x, courses[11][0], 3, get_grade())
+                else:
+                    Class_History.insert(x, courses[10][0], 3, get_grade())
+
+            # Social
+            if "U.S. History" in failed:
+                Class_History.insert(x, courses[13][0], 3, get_grade())
+            elif "U.S. Government" in failed:
+                Class_History.insert(x, courses[14][0], 3, get_grade())
+            else:
+                if [y for y in classes if y.class_name == "U.S. Government"]:
+                    Class_History.insert(x, courses[15][0], 3, get_grade())
+                else:
+                    Class_History.insert(x, courses[14][0], 3, get_grade())
+
+            # Elective
+            r = random.randint(17, 20)
+            Class_History.insert(x, courses[r][0], 3, get_grade())
+
+            r = random.randint(21, 27)
+            Class_History.insert(x, courses[r][0], 3, get_grade())
+
+            # Study Hall
+            Class_History.insert(x, courses[28][0], 3, get_grade())
+    session.commit()
+
+
+def get_grade():
+    r = random.random()
+    if r <= 0.6:
+        return "A"
+    elif r <= 0.8:
+        return "B"
+    elif r <= 0.925:
+        return "C"
+    elif r <= .98:
+        return "D"
+    else:
+        return "F"
+
+
+def classes_failed(student_id):
+    failed = []
+    for c in Class_History.by_student_id(student_id)[:-7]:
+        if c.grade == "F":
+            failed.append(c.class_name)
+    return failed
