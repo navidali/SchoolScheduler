@@ -1,7 +1,9 @@
 import math
 
 from reportlab.pdfgen.canvas import Canvas
-
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import inch
+from reportlab.platypus import Table, TableStyle
 from db_alchemy import *
 
 
@@ -60,7 +62,7 @@ def generate_schedule():
         pref = Preference.by_student_id(id)
         for p in pref:
             for x in range(1, 8):
-                class_id_search = Course.available(p['course_id'], x, id)
+                class_id_search = Course.available(p.course_id, x, id)
                 if not class_id_search == -1 and Student.available(id, x):
                     Schedule.insert(id, class_id_search, x)
                     break
@@ -74,16 +76,28 @@ def generate_schedule():
 
 # Generate PDF schedules
 def generate_pdfs():
-    for x in range(100):
+    pdfmetrics.registerFont(TTFont('DejaVuSans', 'DejaVuSans.ttf'))
+    for x in range(10):
         student = Student.by_id(x)
         schedules = Schedule.by_student_id(x)
-        canvas = Canvas(f"export/{student.first}_{x}.pdf")
-        y_pos = 720
-
-        canvas.drawString(72, y_pos, f"{student.first} {student.last}")
-        canvas.drawString(396, y_pos, f"Student Id: {student.id}")
+        canvas = Canvas(f"export/{student.first}_{x}.pdf", pagesize=(8.5 * inch, 11 * inch / 2))
+        y_pos = 330
+        canvas.setFont('DejaVuSans', 16)
+        canvas.drawString(60, y_pos, f"{student.first} {student.last}")
+        canvas.setFont('DejaVuSans', 12)
+        # fix grade to be in db?
+        canvas.drawString(340, y_pos,
+                          f"Student Id: {student['id']}    GPA: {student.gpa}    Grade: {math.floor(student.id / 250 + 9)}")
+        data = [("Class Period", "Class Name")]
         for sch in schedules:
             y_pos = y_pos - 36
-            sch_class = Class.get_name(sch.class_id)
-            canvas.drawString(72, y_pos, f"Period {sch.period}: {sch_class.name}")
+            sch_class = get_class_name(sch.class_id)
+            # canvas.drawString(60, y_pos, f"Period {sch['period']}: {sch_class['name']}")
+            data.append((f"Period {sch.period}", sch_class.name))
+        table = Table(data, 2 * inch, .325 * inch)
+        table.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 12), ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
+                                   ('LEFTPADDING', (1, 0), (-1, -1), 30),
+                                   ('GRID', (0, 0), (-1, -1), 0.25, colors.black)]))
+        table.wrapOn(canvas, 8 * inch, 8 * inch)
+        table.drawOn(canvas, 60, 90)
         canvas.save()
