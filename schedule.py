@@ -1,9 +1,11 @@
 import math
 
 from reportlab.pdfgen.canvas import Canvas
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import inch
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.units import inch
 from reportlab.platypus import Table, TableStyle
+from reportlab.lib import colors
 from db_alchemy import *
 
 
@@ -87,7 +89,7 @@ def generate_pdfs():
         canvas.setFont('DejaVuSans', 12)
         # fix grade to be in db?
         canvas.drawString(340, y_pos,
-                          f"Student Id: {student['id']}    GPA: {student.gpa}    Grade: {math.floor(student.id / 250 + 9)}")
+                          f"Student Id: {student.id}    GPA: {student.gpa}    Grade: {math.floor(student.id / 250 + 9)}")
         data = [("Class Period", "Class Name")]
         for sch in schedules:
             y_pos = y_pos - 36

@@ -126,7 +126,7 @@ class Schedule(Base):
         session.commit()
 
     @staticmethod
-    def by_student_id(student):
+    def by_student_id(student_id):
         query = session.query(Schedule).where(Schedule.student_id == student_id)
         return session.execute(query).scalar()
 
