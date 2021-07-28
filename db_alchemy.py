@@ -381,7 +381,7 @@ def insert_test_preferences():
         # Study Hall
         Preference.insert(28, x, 7)
 
-    for x in range(900, 999):
+    for x in range(900, 1000):
         # ELA 12th grade everyone takes around 2% fail and must retake
         r = random.random()
         if r < 0.98:
@@ -448,7 +448,7 @@ def insert_test_coursework():
                ['Study Hall', 'FREE']
                ]
 
-    for x in range(350, 999):
+    for x in range(350, 1000):
         Class_History.insert(x, courses[5][0], 3, get_grade())
         r = random.random()
         if (r < 0.9):
@@ -527,7 +527,7 @@ def insert_test_coursework():
             # Study Hall
             Class_History.insert(x, courses[28][0], 3, get_grade())
 
-        elif x in range(900, 999):
+        elif x in range(900, 1000):
             failed = classes_failed(x)
             classes = Class_History.by_student_id(x)
 
