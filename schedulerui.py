@@ -36,6 +36,8 @@ class Ui_MainWindow(object):
         self.search_edit.setGeometry(QtCore.QRect(110, 0, 120, 20))
         self.search_edit.setStyleSheet("")
         self.search_edit.setObjectName("search_edit")
+        self.search_edit.textEdited.connect(
+            lambda: self.search_mode(self.search_edit.text(), self.dropdown.currentIndex()))
         self.search_button = QtWidgets.QToolButton(self.centralwidget)
         self.search_button.setGeometry(QtCore.QRect(230, 0, 20, 20))
         self.search_button.setStyleSheet("background-color: rgb(0, 0, 127);")
@@ -394,6 +396,7 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        MainWindow.setStatusBar(self.statusbar)
         self.actionImport_Teachers = QtWidgets.QAction(MainWindow)
         self.actionImport_Teachers.setObjectName("actionImport_Teachers")
         self.actionStudents = QtWidgets.QAction(MainWindow)
@@ -646,6 +649,17 @@ class Ui_MainWindow(object):
         self.hide_edit_elements()
         self.check_box_enabled(False)
 
+    def search_mode(self, name, index):
+        if index == 0:
+            students_list = Student.get_all()
+            self.list_tree.clear()
+
+            for student in students_list:
+                if name in (student.last + ", " + student.first):
+                    item_name = QtWidgets.QTreeWidgetItem(self.list_tree)
+                    item_name.setText(0, student.last + ", " + student.first)
+                    item_name.setData(1, QtCore.Qt.DisplayRole, student.id)
+
     def create_new_student(self):
         name = self.name_edit.text()
         first_last = name.split(" ", 2)
@@ -803,9 +817,9 @@ class Ui_MainWindow(object):
         self.lineEdit.setObjectName("lineEdit")
         import_dialog.setWindowTitle("Dialog")
         self.label.setText("Enter the location of the file you wish to import:")
+        self.buttonBox.accepted.connect(self.createFakeDataBase)
         self.buttonBox.accepted.connect(import_dialog.accept)
         self.buttonBox.rejected.connect(import_dialog.reject)
-        import_dialog.accepted.connect(lambda: self.createFakeDataBase(self.lineEdit.text()))
         QtCore.QMetaObject.connectSlotsByName(import_dialog)
         import_dialog.show()
         
@@ -824,7 +838,7 @@ class Ui_MainWindow(object):
         for student in students_list:
             item_name = QtWidgets.QTreeWidgetItem(self.list_tree)
             item_name.setText(0, student.last + ", " + student.first)
-            item_name.setText(1, str(student.id))
+            item_name.setData(1, QtCore.Qt.DisplayRole, student.id)
 
     # Expensive call
     def populate_course_list(self):
@@ -832,8 +846,8 @@ class Ui_MainWindow(object):
         self.list_tree.clear()
         for course in course_list:
             item_name = QtWidgets.QTreeWidgetItem(self.list_tree)
-            item_name.setText(0, str(course.name))
-            item_name.setText(1, str(course.id))
+            item_name.setText(0, str(course._data[0].name))
+            item_name.setData(1, QtCore.Qt.DisplayRole, course._data[0].id)
 
     def update_dropdown(self):
         if self.dropdown.currentText() == "Courses":
@@ -851,6 +865,7 @@ class Ui_MainWindow(object):
     def search_by_id_tree_select(self, id_request):
         students_list = Student.get_all()
         course_list = Course.get_all()
+        self.tableWidget.clear()
 
         if self.dropdown.currentText() == "Courses":
             for course in course_list:
@@ -870,7 +885,7 @@ class Ui_MainWindow(object):
                 pref = Preference.by_student_id(student.id)
 
                 x = 0
-                
+
                 for p in qline:
                     course_id = pref[x].course_id
                     qline[x].setText(str(x + 1) + '. ' + str(Course.by_id(course_id).name))
