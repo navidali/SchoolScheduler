@@ -803,9 +803,9 @@ class Ui_MainWindow(object):
         self.lineEdit.setObjectName("lineEdit")
         import_dialog.setWindowTitle("Dialog")
         self.label.setText("Enter the location of the file you wish to import:")
-        self.buttonBox.accepted.connect(self.createFakeDataBase)
         self.buttonBox.accepted.connect(import_dialog.accept)
         self.buttonBox.rejected.connect(import_dialog.reject)
+        import_dialog.accepted.connect(lambda: self.createFakeDataBase(self.lineEdit.text()))
         QtCore.QMetaObject.connectSlotsByName(import_dialog)
         import_dialog.show()
         
@@ -833,7 +833,7 @@ class Ui_MainWindow(object):
         for course in course_list:
             item_name = QtWidgets.QTreeWidgetItem(self.list_tree)
             item_name.setText(0, str(course.name))
-            item_name.setText(1, str(course.course_id))
+            item_name.setText(1, str(course.id))
 
     def update_dropdown(self):
         if self.dropdown.currentText() == "Courses":
@@ -843,11 +843,8 @@ class Ui_MainWindow(object):
             self.populate_student_list()
             return
 
-    def createFakeDataBase(self):
-        insert_test_students()
-        insert_test_courses()
-        insert_test_preferences()
-        insert_test_coursework()
+    def createFakeDataBase(self, path="./import/Data.xlsx"):
+        import_data(path)
         self.populate_student_list()
 
     # Search should also apply to teachers in future
@@ -857,7 +854,7 @@ class Ui_MainWindow(object):
 
         if self.dropdown.currentText() == "Courses":
             for course in course_list:
-                if course.course_id == int(id_request):
+                if course.id == int(id_request):
                     self.name.setText("Name: " + str(course.name))
                     return
 

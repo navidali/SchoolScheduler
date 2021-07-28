@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QApplication
 import schedulerui
 from schedule import *
 from wsl import *
-
+from generatedata import *
 
 class SchoolScheduler(QtWidgets.QMainWindow, schedulerui.Ui_MainWindow):
     def __init__(self, parent=None):
@@ -24,6 +24,10 @@ def start_gui():
 def main():
     # UI
     set_display_to_host()
+
+    #generate_test_data()
+    #import_data("./import/Data.xlsx")
+
     start_gui()
 
 
