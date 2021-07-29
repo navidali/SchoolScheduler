@@ -815,9 +815,10 @@ class Ui_MainWindow(object):
         self.lineEdit = QtWidgets.QLineEdit(import_dialog)
         self.lineEdit.setGeometry(QtCore.QRect(28, 72, 291, 23))
         self.lineEdit.setObjectName("lineEdit")
+        self.lineEdit.setText("./import/Data.xlsx")
         import_dialog.setWindowTitle("Dialog")
         self.label.setText("Enter the location of the file you wish to import:")
-        self.buttonBox.accepted.connect(self.createFakeDataBase)
+        self.buttonBox.accepted.connect(lambda: self.createFakeDataBase(self.lineEdit.text()))
         self.buttonBox.accepted.connect(import_dialog.accept)
         self.buttonBox.rejected.connect(import_dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(import_dialog)
@@ -846,8 +847,8 @@ class Ui_MainWindow(object):
         self.list_tree.clear()
         for course in course_list:
             item_name = QtWidgets.QTreeWidgetItem(self.list_tree)
-            item_name.setText(0, str(course._data[0].name))
-            item_name.setData(1, QtCore.Qt.DisplayRole, course._data[0].id)
+            item_name.setText(0, str(course.name))
+            item_name.setData(1, QtCore.Qt.DisplayRole, course.id)
 
     def update_dropdown(self):
         if self.dropdown.currentText() == "Courses":
@@ -857,11 +858,8 @@ class Ui_MainWindow(object):
             self.populate_student_list()
             return
 
-    def createFakeDataBase(self):
-        insert_test_students()
-        insert_test_courses()
-        insert_test_preferences()
-        insert_test_coursework()
+    def createFakeDataBase(self, path="./import/Data.xlsx"):
+        import_data(path)
         self.populate_student_list()
 
     # Search should also apply to teachers in future
@@ -872,8 +870,8 @@ class Ui_MainWindow(object):
 
         if self.dropdown.currentText() == "Courses":
             for course in course_list:
-                if course._data[0].id == int(id_request):
-                    self.name.setText("Name: " + str(course._data[0].name))
+                if course.id == int(id_request):
+                    self.name.setText("Name: " + str(course.name))
                     return
 
         for student in students_list:
