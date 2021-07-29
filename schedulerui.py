@@ -846,8 +846,8 @@ class Ui_MainWindow(object):
         self.list_tree.clear()
         for course in course_list:
             item_name = QtWidgets.QTreeWidgetItem(self.list_tree)
-            item_name.setText(0, str(course._data[0].name))
-            item_name.setData(1, QtCore.Qt.DisplayRole, course._data[0].id)
+            item_name.setText(0, str(course.name))
+            item_name.setData(1, QtCore.Qt.DisplayRole, course.id)
 
     def update_dropdown(self):
         if self.dropdown.currentText() == "Courses":
