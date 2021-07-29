@@ -21,7 +21,9 @@ class Student(Base):
     id = Column(Integer, primary_key=True)
     first = Column(String(250), nullable=False)
     last = Column(String(250), nullable=False)
-    gpa = Column(Integer, nullable=False)
+    gpa = Column(Integer, nullable=True)
+    credits = Column(Integer, nullable=True)
+    grade = Column(Integer, nullable=False)
 
     @staticmethod
     def get_all():
@@ -34,8 +36,8 @@ class Student(Base):
         return session.execute(query).scalar()
 
     @staticmethod
-    def insert(id, first, last, gpa):
-        session.add(Student(id=id, first=first, last=last, gpa=gpa))
+    def insert(id, first, last, grade):
+        session.add(Student(id=id, first=first, last=last, grade=grade))
 
     @staticmethod
     def delete(id):
@@ -50,6 +52,21 @@ class Student(Base):
         if num_in_period == 0:
             return True
         return False
+
+    @staticmethod
+    def update_computed(id):
+        s = Student.by_id(id)
+        credits, gpa, count = (0,0,0)
+        for h in Class_History.by_student_id(id):
+            credits += h.credit
+            if h.grade == 'A': gpa += 4
+            elif h.grade == 'B': gpa += 3
+            elif h.grade == 'C': gpa += 2
+            elif h.grade == 'D': gpa += 1
+            count += 1
+        if count != 0: s.gpa = round(gpa / count, 1)
+        else: s.gpa = 0
+        s.credits = credits
 
 
 class Class(Base):
@@ -207,7 +224,10 @@ def import_data(path):
     preferences = workbook['Preferences']
     for i in preferences:
         Preference.insert(i[0].value, i[1].value, i[2].value)
+    for s in Student.get_all():
+        Student.update_computed(s.id)
     session.commit()
+
 
 # db_purge()
 # db_init()

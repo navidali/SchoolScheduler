@@ -255,6 +255,9 @@ class Ui_MainWindow(object):
         self.checkBox_algebra = QtWidgets.QCheckBox(self.scrollAreaWidgetContents_2)
         self.checkBox_algebra.setObjectName("checkBox_algebra")
         self.verticalLayout.addWidget(self.checkBox_algebra)
+        self.checkBox_algebra_2 = QtWidgets.QCheckBox(self.scrollAreaWidgetContents_2)
+        self.checkBox_algebra_2.setObjectName("checkBox_algebra_2")
+        self.verticalLayout.addWidget(self.checkBox_algebra_2)
         self.checkBox_geometry = QtWidgets.QCheckBox(self.scrollAreaWidgetContents_2)
         self.checkBox_geometry.setObjectName("checkBox_geometry")
         self.verticalLayout.addWidget(self.checkBox_geometry)
@@ -477,6 +480,7 @@ class Ui_MainWindow(object):
         self.checkBox_ela_4.setText(_translate("MainWindow", "English 4"))
         self.label_math.setText(_translate("MainWindow", "Mathematics"))
         self.checkBox_algebra.setText(_translate("MainWindow", "Algebra 1"))
+        self.checkBox_algebra_2.setText(_translate("MainWindow", "Algebra 2"))
         self.checkBox_geometry.setText(_translate("MainWindow", "Geometry"))
         self.checkBox_math_3.setText(_translate("MainWindow", "Mathematrics 3rd Credit"))
         self.checkBox_math_4.setText(_translate("MainWindow", "Mathematics 4th Credit"))
@@ -535,6 +539,7 @@ class Ui_MainWindow(object):
         self.checkBox_ela_3.setEnabled(tf)
         self.checkBox_ela_4.setEnabled(tf)
         self.checkBox_algebra.setEnabled(tf)
+        self.checkBox_algebra_2.setEnabled(tf)
         self.checkBox_geometry.setEnabled(tf)
         self.checkBox_math_3.setEnabled(tf)
         self.checkBox_math_4.setEnabled(tf)
@@ -663,7 +668,7 @@ class Ui_MainWindow(object):
     def create_new_student(self):
         name = self.name_edit.text()
         first_last = name.split(" ", 2)
-        Student.insert(int(self.id_edit.text()), first_last[0], first_last[1], float(self.gpa_edit.text()))
+        Student.insert(int(self.id_edit.text()), first_last[0], first_last[1], float(self.grade_edit.text()))
         self.clear_edit_fields()
         self.refresh_list()
 
@@ -878,6 +883,8 @@ class Ui_MainWindow(object):
             if student.id == int(id_request):
                 self.name.setText("Name: " + student.first + " " + student.last)
                 self.id.setText("Student ID: " + str(student.id))
+                self.grade.setText("Grade: " + str(student.grade))
+                self.num_credits.setText("Total Credits: " + str(student.credits))
                 self.gpa.setText("GPA: " + str(student.gpa))
 
                 qline = [self.preference1, self.preference2, self.preference3, self.preference4, self.preference5,
@@ -892,6 +899,8 @@ class Ui_MainWindow(object):
                     qline[x].setText(str(x + 1) + '. ' + str(Course.by_id(course_id).name))
                     x += 1
 
+                self.load_grad_requirements(student.id)
+
                 classes = Class_History.by_student_id(student.id)
                 index = 0
                 for c in classes:
@@ -900,6 +909,68 @@ class Ui_MainWindow(object):
                     self.tableWidget.setItem(index, 2, QtWidgets.QTableWidgetItem(str(c.grade)))
                     index += 1
 
+    def load_grad_requirements(self, id):
+        self.clear_grad_requirements()
+        for c in Class_History.by_student_id(id):
+            if c.class_name == 'ELA 1': self.checkBox_ela_1.setChecked(True)
+            elif c.class_name == 'ELA 2': self.checkBox_ela_2.setChecked(True)
+            elif c.class_name == 'ELA 3': self.checkBox_ela_3.setChecked(True)
+            elif c.class_name == 'ELA 4': self.checkBox_ela_4.setChecked(True)
+            elif c.class_name == 'Algebra 1': self.checkBox_algebra.setChecked(True)
+            elif c.class_name == 'Algebra 2': self.checkBox_algebra_2.setChecked(True)
+            elif c.class_name == 'Geometry': self.checkBox_geometry.setChecked(True)
+            elif c.class_name == 'ADV MATH 1': self.checkBox_math_3.setChecked(True)
+            elif c.class_name == 'ADV MATH 2': self.checkBox_math_4.setChecked(True)
+            elif c.class_name == 'Biology 1': self.checkBox_bio.setChecked(True)
+            elif c.class_name == 'Science Class 1': self.checkBox_sci_2.setChecked(True)
+            elif c.class_name == 'Science Class 2': self.checkBox_sci_3.setChecked(True)
+            elif c.class_name == 'U.S. History': self.checkBox_history_us.setChecked(True)
+            elif c.class_name == 'World History': self.checkBox_history_world.setChecked(True)
+            elif c.class_name == 'U.S. Government': self.checkBox_gov.setChecked(True)
+            elif c.class_name == 'Economics': self.checkBox_econ.setChecked(True)
+            elif c.class_name == 'Elective 1': self.checkBox_e1.setChecked(True)
+            elif c.class_name == 'Elective 2': self.checkBox_e2.setChecked(True)
+            elif c.class_name == 'Elective 3': self.checkBox_e3.setChecked(True)
+            elif c.class_name == 'Elective 4': self.checkBox_e4.setChecked(True)
+            elif c.class_name == 'Elective 5': self.checkBox_e5.setChecked(True)
+            elif c.class_name == 'Elective 6': self.checkBox_e6.setChecked(True)
+            elif c.class_name == 'Elective 7': self.checkBox_e7.setChecked(True)
+            elif c.class_name == 'Elective 8': self.checkBox_e8.setChecked(True)
+            elif c.class_name == 'ART 1': self.checkBox_art.setChecked(True)
+            elif c.class_name == 'ART 2': self.checkBox_pe.setChecked(True)
+            elif c.class_name == 'ART 3': self.checkBox_online.setChecked(True)
+
+    def clear_grad_requirements(self):
+        self.checkBox_ela_1.setChecked(False)
+        self.checkBox_ela_2.setChecked(False)
+        self.checkBox_ela_3.setChecked(False)
+        self.checkBox_ela_4.setChecked(False)
+        self.checkBox_algebra.setChecked(False)
+        self.checkBox_algebra_2.setChecked(False)
+        self.checkBox_geometry.setChecked(False)
+        self.checkBox_math_3.setChecked(False)
+        self.checkBox_math_4.setChecked(False)
+        self.checkBox_bio.setChecked(False)
+        self.checkBox_sci_2.setChecked(False)
+        self.checkBox_sci_3.setChecked(False)
+        self.checkBox_history_us.setChecked(False)
+        self.checkBox_history_world.setChecked(False)
+        self.checkBox_gov.setChecked(False)
+        self.checkBox_econ.setChecked(False)
+        self.checkBox_e1.setChecked(False)
+        self.checkBox_e2.setChecked(False)
+        self.checkBox_e3.setChecked(False)
+        self.checkBox_e4.setChecked(False)
+        self.checkBox_e5.setChecked(False)
+        self.checkBox_e6.setChecked(False)
+        self.checkBox_e7.setChecked(False)
+        self.checkBox_e8.setChecked(False)
+        self.checkBox_art.setChecked(False)
+        self.checkBox_pe.setChecked(False)
+        self.checkBox_online.setChecked(False)
+
+# self.checkBox_fsa_ela.setEnabled = True
+# self.checkBox_fsa_algebra.setEnabled = True
 
 def get_color_string(id):
     color_string = "color: "
