@@ -903,6 +903,16 @@ class Ui_MainWindow(object):
 
                 classes = Class_History.by_student_id(student.id)
                 index = 0
+
+                self.tableWidget.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem("Name"))
+                self.tableWidget.setHorizontalHeaderItem(1, QtWidgets.QTableWidgetItem("Credits"))
+                self.tableWidget.setHorizontalHeaderItem(2, QtWidgets.QTableWidgetItem("Grade"""))
+
+                if len(classes) == 0:
+                    self.tableWidget.setRowCount(3)
+                else:
+                    self.tableWidget.setRowCount(len(classes))
+
                 for c in classes:
                     self.tableWidget.setItem(index, 0, QtWidgets.QTableWidgetItem(c.class_name))
                     self.tableWidget.setItem(index, 1, QtWidgets.QTableWidgetItem(str(c.credit)))
