@@ -80,7 +80,7 @@ def insert_test_preferences(workbook):
     # Note that Preference period is almost meaningless and is simply here for indexing in UI
     worksheet = workbook.add_worksheet("Preferences")
     row = 0
-    for x in range(0, 349):
+    for x in range(0, 350):
         # ELA 9th grade everyone takes
         write_tuple(worksheet, (5, x, 1), row)
         row += 1
@@ -118,7 +118,7 @@ def insert_test_preferences(workbook):
         write_tuple(worksheet, (28, x, 7), row)
         row += 1
 
-    for x in range(350, 649):
+    for x in range(350, 650):
         # ELA 10th grade everyone takes around 2% fail and must retake
         r = random.random()
         if (r < 0.98):
