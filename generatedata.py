@@ -26,8 +26,12 @@ def insert_test_students(workbook):
     coursework_row = 0
 
     for x in range(1000):
-        write_tuple(worksheet_students, (x, lines[random.randint(0, 10000)], lines[random.randint(0, 10000)], 4), x)
-        coursework_row = insert_test_coursework(worksheet_coursework, (x, lines[random.randint(0, 10000)], lines[random.randint(0, 10000)], 4), coursework_row)
+        grade = 9
+        if x in range(350,650): grade = 10
+        elif x in range(650,900): grade = 11
+        elif x in range(900,1000): grade = 12
+        write_tuple(worksheet_students, (x, lines[random.randint(0, 10000)], lines[random.randint(0, 10000)], grade), x)
+        coursework_row = insert_test_coursework(worksheet_coursework, (x, lines[random.randint(0, 10000)], lines[random.randint(0, 10000)]), coursework_row)
 
 
 def insert_test_courses(workbook):
@@ -203,7 +207,7 @@ def insert_test_preferences(workbook):
         write_tuple(worksheet, (28, x, 7), row)
         row += 1
 
-    for x in range(900, 999):
+    for x in range(900, 1000):
         # ELA 12th grade everyone takes around 2% fail and must retake
         r = random.random()
         if r < 0.98:
@@ -329,7 +333,7 @@ def insert_test_coursework(worksheet, student, row):
         classes.append(courses[28][0])
         row += 1
 
-        if x in range(650, 900):
+        if x in range(650, 1000):
             #failed = classes_failed(x)
             #classes = Class_History.by_student_id(x)
 
@@ -419,7 +423,7 @@ def insert_test_coursework(worksheet, student, row):
             classes.append(courses[28][0])
             row += 1
 
-        elif x in range(900, 1000):
+        if x in range(900, 1000):
             #failed = classes_failed(x)
             #classes = Class_History.by_student_id(x)
 
@@ -433,9 +437,13 @@ def insert_test_coursework(worksheet, student, row):
                 row += 1
 
             # Math
-            if "Algebra 2" in failed or [y for y in classes if y != "Algebra 2"]:
+            if "Algebra 2" in failed or [y for y in classes if y != "Algebra 2"] and [y for y in classes if y == "Algebra 1"]:
                 write_tuple(worksheet, (x, courses[1][0], 3, get_grade(failed, courses[1][0])), row)
                 classes.append(courses[1][0])
+                row += 1
+            elif [y for y in classes if y == "Algebra 1"]:
+                write_tuple(worksheet, (x, courses[0][0], 3, get_grade(failed, courses[0][0])), row)
+                classes.append(courses[0][0])
                 row += 1
             else:
                 r = random.randint(3, 4)
