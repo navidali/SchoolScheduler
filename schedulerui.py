@@ -632,6 +632,13 @@ class Ui_MainWindow(object):
         self.grade.setText("Grade: ")
         self.num_credits.setText("Credits: ")
         self.gpa.setText("GPA: ")
+        self.preference1.setText("1. ")
+        self.preference2.setText("2. ")
+        self.preference3.setText("3. ")
+        self.preference4.setText("4. ")
+        self.preference5.setText("5. ")
+        self.preference6.setText("6. ")
+        self.preference7.setText("7. ")
 
     def clear_edit_fields(self):
         self.name_edit.setText("")
