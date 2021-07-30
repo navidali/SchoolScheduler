@@ -435,7 +435,8 @@ class Ui_MainWindow(object):
         self.actionStudents.triggered.connect(self.open_input_dialog)
         # called in close input dialog, self.actionStudents.triggered.connect(lambda: self.createFakeDataBase())
         # Change name refactor later TODO
-        self.actionImport_Teachers.triggered.connect(lambda: generate_schedule())
+        self.actionImport_Teachers.triggered.connect(self.open_export_dialog)
+        self.actionImport_Teachers.triggered.connect(generate_schedule())
         self.list_tree.itemClicked.connect(
             lambda: self.search_by_id_tree_select(self.list_tree.currentItem().text(1)))
         self.list_tree.itemClicked.connect(lambda: print(self.list_tree.currentItem().text(1)))
@@ -835,6 +836,25 @@ class Ui_MainWindow(object):
         self.buttonBox.rejected.connect(import_dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(import_dialog)
         import_dialog.show()
+        
+    def open_export_dialog(self):
+        export_dialog = QDialog(self)
+        export_dialog.setObjectName("Dialog")
+        export_dialog.resize(400, 193)
+        self.buttonBox = QtWidgets.QDialogButtonBox(export_dialog)
+        self.buttonBox.setGeometry(QtCore.QRect(31, 140, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.label2 = QtWidgets.QLabel(export_dialog)
+        self.label2.setGeometry(QtCore.QRect(28, 28, 331, 16))
+        self.label2.setObjectName("label2")
+        export_dialog.setWindowTitle("Dialog")
+        self.label2.setText('Exported files will be found in the folder named "Export"')
+        self.buttonBox.accepted.connect(export_dialog.accept)
+        self.buttonBox.rejected.connect(export_dialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(export_dialog)
+        export_dialog.show()
         
     # Do not Use Deprecated
     def show_student(self, student):
