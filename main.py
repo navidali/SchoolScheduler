@@ -2,10 +2,13 @@ import sys
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QMessageBox
 
+import os.path
 import schedulerui
 from schedule import *
 from wsl import *
+
 from generatedata import *
 
 class SchoolScheduler(QtWidgets.QMainWindow, schedulerui.Ui_MainWindow):
@@ -15,20 +18,20 @@ class SchoolScheduler(QtWidgets.QMainWindow, schedulerui.Ui_MainWindow):
 
 
 def start_gui():
+
     app = QApplication(sys.argv)
     form = SchoolScheduler()
     form.show()
     app.exec_()
 
 
+
 def main():
     # UI
     set_display_to_host()
 
-    #generate_test_data()
-    #import_data("./import/Data.xlsx")
-
     start_gui()
+
 
 
 if __name__ == '__main__':

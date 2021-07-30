@@ -68,7 +68,7 @@ def insert_test_courses(workbook):
                ['ART 3', 'FINEART'],
                ['Study Hall', 'FREE']
                ]
-    worksheet = workbook.add_worksheet("Courses")
+    worksheet = workbook.add_worksheet("Course")
     x = 0
     for c in courses:
         write_tuple(worksheet, (x, c[0], c[1], 15), x)

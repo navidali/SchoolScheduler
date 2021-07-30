@@ -1,11 +1,8 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, MetaData, func
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-import random
 from openpyxl import load_workbook
-
+from sqlalchemy import Column, ForeignKey, Integer, String, func
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 engine = create_engine('sqlite:///SchoolScheduler.db')
@@ -56,16 +53,22 @@ class Student(Base):
     @staticmethod
     def update_computed(id):
         s = Student.by_id(id)
-        credits, gpa, count = (0,0,0)
+        credits, gpa, count = (0, 0, 0)
         for h in Class_History.by_student_id(id):
             credits += h.credit
-            if h.grade == 'A': gpa += 4
-            elif h.grade == 'B': gpa += 3
-            elif h.grade == 'C': gpa += 2
-            elif h.grade == 'D': gpa += 1
+            if h.grade == 'A':
+                gpa += 4
+            elif h.grade == 'B':
+                gpa += 3
+            elif h.grade == 'C':
+                gpa += 2
+            elif h.grade == 'D':
+                gpa += 1
             count += 1
-        if count != 0: s.gpa = round(gpa / count, 1)
-        else: s.gpa = 0
+        if count != 0:
+            s.gpa = round(gpa / count, 1)
+        else:
+            s.gpa = 0
         s.credits = credits
 
 
@@ -151,7 +154,7 @@ class Schedule(Base):
     @staticmethod
     def by_student_id(student_id):
         query = session.query(Schedule).where(Schedule.student_id == student_id)
-        return session.execute(query).scalar()
+        return session.execute(query).all()
 
 
 class Preference(Base):
@@ -218,8 +221,8 @@ def import_data(path):
     coursework = workbook['Coursework']
     for i in coursework:
         Class_History.insert(i[0].value, i[1].value, i[2].value, i[3].value)
-    courses = workbook['Courses']
-    for i in courses:
+    course = workbook['Course']
+    for i in course:
         Course.insert(i[0].value, i[1].value, i[2].value, i[3].value)
     preferences = workbook['Preferences']
     for i in preferences:
@@ -227,7 +230,6 @@ def import_data(path):
     for s in Student.get_all():
         Student.update_computed(s.id)
     session.commit()
-
 
 # db_purge()
 # db_init()
@@ -452,4 +454,3 @@ def import_data(path):
 #         # Study Hall
 #         Preference.insert(28, x, 7)
 #     session.commit()
-
