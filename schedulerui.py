@@ -436,7 +436,7 @@ class Ui_MainWindow(object):
         # called in close input dialog, self.actionStudents.triggered.connect(lambda: self.createFakeDataBase())
         # Change name refactor later TODO
         self.actionImport_Teachers.triggered.connect(self.open_export_dialog)
-        self.actionImport_Teachers.triggered.connect(generate_schedule())
+        self.actionImport_Teachers.triggered.connect(lambda: generate_schedule())
         self.list_tree.itemClicked.connect(
             lambda: self.search_by_id_tree_select(self.list_tree.currentItem().text(1)))
         self.list_tree.itemClicked.connect(lambda: print(self.list_tree.currentItem().text(1)))
