@@ -27,20 +27,21 @@ def generate_schedule():
 
     lib = cdll.LoadLibrary('./sa.so')
 
-    #pref_al = Preference.get_all()
+    pref_al = Preference.get_all()
 
     p_course_id = []
     p_student_id = []
     p_period = []
 
-    #for pref in pref_al:
-        #p_course_id.append(pref.course_id)
-        #p_student_id.append(pref.student_id)
-        #p_period.append(pref.period)
+    for pref in pref_al:
+        p_course_id.append(pref.course_id)
+        p_student_id.append(pref.student_id)
+        p_period.append(pref.period)
 
     c_p_course_id = (ctypes.c_int32 * len(p_course_id))(*p_course_id)
     c_p_student_id = (ctypes.c_int32 * len(p_student_id))(*p_student_id)
     c_p_period = (ctypes.c_int32 * len(p_period))(*p_period)
+    #c_p_num = ctypes.c_int32
 
     c_c_id = create_string_buffer(4*len(p_student_id))
     c_c_course_id = create_string_buffer(4*len(p_student_id))
@@ -52,7 +53,20 @@ def generate_schedule():
     c_s_period = create_string_buffer(4*len(p_student_id))
     c_s_num = create_string_buffer(4)
 
-    lib.schedule(c_p_course_id, c_s_num)
+    lib.schedule(c_p_course_id,
+                 c_p_student_id,
+                 c_p_period,
+                 len(p_period),
+
+                 c_c_id,
+                 c_c_course_id,
+                 c_c_period,
+                 c_c_num,
+
+                 c_s_student_id,
+                 c_s_class_id,
+                 c_s_period,
+                 c_s_num)
 
     print(int.from_bytes(c_s_num, byteorder='little'))
 
