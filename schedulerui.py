@@ -588,20 +588,6 @@ class Ui_MainWindow(object):
         self.ok_button.show()
         self.ok_button.setEnabled(True)
 
-    def show_edit_elements_(self):
-        self.name_edit.show()
-        self.id_edit.show()
-        self.grade_edit.show()
-        self.pref1edit.show()
-        self.pref2edit.show()
-        self.pref3edit.show()
-        self.pref4edit.show()
-        self.pref5edit.show()
-        self.pref6edit.show()
-        self.pref7edit.show()
-        self.ok_button.show()
-        self.ok_button.setEnabled(True)
-
     def enter_add_mode(self):
         self.clear_shown_student()
         self.clear_edit_fields()
@@ -614,8 +600,8 @@ class Ui_MainWindow(object):
             if self.name.text() != "Name: ":
                 self.set_edit_elements()
                 session.delete(Student.by_id(int(self.id.text().split(' ')[2])))
-                self.clear_shown_student_()
-            self.show_edit_elements_()
+                self.clear_shown_student()
+            self.show_edit_elements()
             self.check_box_enabled(True)
 
     def set_edit_elements(self):
@@ -646,19 +632,6 @@ class Ui_MainWindow(object):
         self.preference6.setText("6. ")
         self.preference7.setText("7. ")
 
-    def clear_shown_student_(self):
-        self.name.setText("Name: ")
-        self.id.setText("ID: ")
-        self.grade.setText("Grade: ")
-        self.preference1.setText("1. ")
-        self.preference2.setText("2. ")
-        self.preference3.setText("3. ")
-        self.preference4.setText("4. ")
-        self.preference5.setText("5. ")
-        self.preference6.setText("6. ")
-        self.preference7.setText("7. ")
-
-
     def clear_edit_fields(self):
         self.name_edit.setText("")
         self.id_edit.setText("")
@@ -681,7 +654,6 @@ class Ui_MainWindow(object):
                 self.open_error_dialog()
         self.clear_edit_fields()
         self.hide_edit_elements()
-        self.clear_shown_student()
         self.check_box_enabled(False)
 
     def search_mode(self, name, index):
