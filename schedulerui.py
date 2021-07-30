@@ -657,7 +657,10 @@ class Ui_MainWindow(object):
 
     def exit_edit_mode(self):
         if self.name_edit.text() != "":
-            self.create_new_student()
+            try:
+                self.create_new_student()
+            except ValueError:
+                self.open_error_dialog()
         self.clear_edit_fields()
         self.hide_edit_elements()
         self.check_box_enabled(False)
@@ -855,6 +858,25 @@ class Ui_MainWindow(object):
         self.buttonBox.rejected.connect(export_dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(export_dialog)
         export_dialog.show()
+        
+    def open_error_dialog(self):
+        error_dialog = QDialog(self)
+        error_dialog.setObjectName("Dialog")
+        error_dialog.resize(400, 193)
+        self.buttonBox = QtWidgets.QDialogButtonBox(error_dialog)
+        self.buttonBox.setGeometry(QtCore.QRect(31, 140, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.plainTextEdit = QtWidgets.QPlainTextEdit(error_dialog)
+        self.plainTextEdit.setGeometry(QtCore.QRect(30, 30, 331, 51))
+        self.plainTextEdit.setObjectName("plainTextEdit")
+        error_dialog.setWindowTitle("Dialog")
+        self.plainTextEdit.setPlainText("Error: please ensure first and last name and a unique integer ID have been entered")
+        self.buttonBox.accepted.connect(error_dialog.accept)
+        self.buttonBox.rejected.connect(error_dialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(error_dialog)
+        error_dialog.show()
         
     # Do not Use Deprecated
     def show_student(self, student):
