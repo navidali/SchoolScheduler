@@ -91,12 +91,12 @@ class Ui_MainWindow(object):
         self.grade_edit = QtWidgets.QLineEdit(self.frame)
         self.grade_edit.setGeometry(QtCore.QRect(515, 20, 32, 16))
         self.grade_edit.setObjectName("grade_edit")
-        self.credits_edit = QtWidgets.QLineEdit(self.frame)
-        self.credits_edit.setGeometry(QtCore.QRect(645, 20, 32, 16))
-        self.credits_edit.setObjectName("credits_edit")
-        self.gpa_edit = QtWidgets.QLineEdit(self.frame)
-        self.gpa_edit.setGeometry(QtCore.QRect(720, 20, 32, 16))
-        self.gpa_edit.setObjectName("gpa_edit")
+        #self.credits_edit = QtWidgets.QLineEdit(self.frame)
+        #self.credits_edit.setGeometry(QtCore.QRect(645, 20, 32, 16))
+        #self.credits_edit.setObjectName("credits_edit")
+        #self.gpa_edit = QtWidgets.QLineEdit(self.frame)
+        #self.gpa_edit.setGeometry(QtCore.QRect(720, 20, 32, 16))
+        #self.gpa_edit.setObjectName("gpa_edit")
         self.edit_button = QtWidgets.QToolButton(self.frame)
         self.edit_button.setGeometry(QtCore.QRect(740, 40, 20, 20))
         icon2 = QtGui.QIcon()
@@ -559,8 +559,8 @@ class Ui_MainWindow(object):
         self.name_edit.hide()
         self.id_edit.hide()
         self.grade_edit.hide()
-        self.credits_edit.hide()
-        self.gpa_edit.hide()
+        #self.credits_edit.hide()
+        #self.gpa_edit.hide()
         self.pref1edit.hide()
         self.pref2edit.hide()
         self.pref3edit.hide()
@@ -576,8 +576,8 @@ class Ui_MainWindow(object):
         self.name_edit.show()
         self.id_edit.show()
         self.grade_edit.show()
-        self.credits_edit.show()
-        self.gpa_edit.show()
+        #self.credits_edit.show()
+        #self.gpa_edit.show()
         self.pref1edit.show()
         self.pref2edit.show()
         self.pref3edit.show()
@@ -592,7 +592,7 @@ class Ui_MainWindow(object):
         self.clear_shown_student()
         self.clear_edit_fields()
         self.show_edit_elements()
-        self.check_box_enabled(True)
+        #self.check_box_enabled(True)
 
     def enter_edit_mode(self):
 
@@ -602,14 +602,14 @@ class Ui_MainWindow(object):
                 session.delete(Student.by_id(int(self.id.text().split(' ')[2])))
                 self.clear_shown_student()
             self.show_edit_elements()
-            self.check_box_enabled(True)
+            #self.check_box_enabled(True)
 
     def set_edit_elements(self):
         self.name_edit.setText(self.name.text().split(" ")[1] + " " + self.name.text().split(" ")[2])
         self.id_edit.setText(self.id.text().split(" ")[2])
         self.grade_edit.setText(self.grade.text().split(" ")[1])
-        self.credits_edit.setText(self.num_credits.text().split(" ")[2]) # should be 2 but credits are not being set
-        self.gpa_edit.setText(self.gpa.text().split(" ")[1])
+        #self.credits_edit.setText(self.num_credits.text().split(" ")[2]) # should be 2 but credits are not being set
+        #self.gpa_edit.setText(self.gpa.text().split(" ")[1])
         self.pref1edit.setText(self.preference1.text().split(" ")[1])
         self.pref2edit.setText(self.preference2.text().split(" ")[1])
         self.pref3edit.setText(self.preference3.text().split(" ")[1])
@@ -617,6 +617,7 @@ class Ui_MainWindow(object):
         self.pref5edit.setText(self.preference5.text().split(" ")[1])
         self.pref6edit.setText(self.preference6.text().split(" ")[1])
         self.pref7edit.setText(self.preference7.text().split(" ")[1])
+        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.AllEditTriggers)
 
     def clear_shown_student(self):
         self.name.setText("Name: ")
@@ -636,8 +637,8 @@ class Ui_MainWindow(object):
         self.name_edit.setText("")
         self.id_edit.setText("")
         self.grade_edit.setText("")
-        self.gpa_edit.setText("")
-        self.credits_edit.setText("")
+        #self.gpa_edit.setText("")
+        #self.credits_edit.setText("")
         self.pref1edit.setText("")
         self.pref2edit.setText("")
         self.pref3edit.setText("")
@@ -670,7 +671,14 @@ class Ui_MainWindow(object):
     def create_new_student(self):
         name = self.name_edit.text()
         first_last = name.split(" ", 2)
-        Student.insert(int(self.id_edit.text()), first_last[0], first_last[1], float(self.grade_edit.text()))
+        s = Student.by_id(int(self.id_edit.text()))
+        if s != None:
+            s.first = first_last[0]
+            s.last = first_last[1]
+            s.grade = float(self.grade_edit.text())
+        else:
+            Student.insert(int(self.id_edit.text()), first_last[0], first_last[1], float(self.grade_edit.text()))
+        self.save_course_history(int(self.id_edit.text()))
         self.clear_edit_fields()
         self.refresh_list()
 
@@ -806,7 +814,7 @@ class Ui_MainWindow(object):
         self.buttonBox.rejected.connect(colors_dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(colors_dialog)
         colors_dialog.show()
-        
+
     def open_input_dialog(self):
 
         if not os.path.isfile("./import/Data.xlsx"):
@@ -839,7 +847,7 @@ class Ui_MainWindow(object):
         self.buttonBox.rejected.connect(import_dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(import_dialog)
         import_dialog.show()
-        
+
     def open_export_dialog(self):
         if not os.path.isfile("./import/Data.xlsx"):
             msg = QMessageBox()
@@ -873,7 +881,7 @@ class Ui_MainWindow(object):
         #export_dialog.accepted.connect(generate_schedule())
 
 
-        
+
     def open_error_dialog(self):
         error_dialog = QDialog(self)
         error_dialog.setObjectName("Dialog")
@@ -892,7 +900,7 @@ class Ui_MainWindow(object):
         self.buttonBox.rejected.connect(error_dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(error_dialog)
         error_dialog.show()
-        
+
     # Do not Use Deprecated
     def show_student(self, student):
         self.name.setText("Name: " + student.first + " " + student.last)
@@ -958,10 +966,11 @@ class Ui_MainWindow(object):
 
                 x = 0
 
-                for p in qline:
-                    course_id = pref[x].course_id
-                    qline[x].setText(str(x + 1) + '. ' + str(Course.by_id(course_id).name))
-                    x += 1
+                for p in pref:
+                    if x < 7:
+                        course_id = pref[x].course_id
+                        qline[x].setText(str(x + 1) + '. ' + str(Course.by_id(course_id).name))
+                        x += 1
 
                 self.load_grad_requirements(student.id)
 
@@ -982,6 +991,7 @@ class Ui_MainWindow(object):
                     self.tableWidget.setItem(index, 1, QtWidgets.QTableWidgetItem(str(c.credit)))
                     self.tableWidget.setItem(index, 2, QtWidgets.QTableWidgetItem(str(c.grade)))
                     index += 1
+                self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
     def load_grad_requirements(self, id):
         self.clear_grad_requirements()
@@ -1042,6 +1052,24 @@ class Ui_MainWindow(object):
         self.checkBox_art.setChecked(False)
         self.checkBox_pe.setChecked(False)
         self.checkBox_online.setChecked(False)
+
+    def save_course_history(self, student_id):
+        rows = self.tableWidget.rowCount()
+
+        classes = Class_History.by_student_id(student_id)
+        for c in classes:
+            c.class_name = self.tableWidget.item(len(classes)-rows, 0).text()
+            c.credit = int(self.tableWidget.item(len(classes)-rows, 1).text())
+            c.grade = self.tableWidget.item(len(classes)-rows, 2).text()
+            rows -= 1
+
+        for i in range(rows):
+            try:
+                Class_History.insert(student_id, self.tableWidget.item(i, 0).text(), int(self.tableWidget.item(i, 1).text()), self.tableWidget.item(i, 2).text())
+            except e:
+                break
+        Student.update_computed(student_id)
+        self.tableWidget.clear()
 
 # self.checkBox_fsa_ela.setEnabled = True
 # self.checkBox_fsa_algebra.setEnabled = True
