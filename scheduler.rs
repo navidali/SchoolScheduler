@@ -15,7 +15,7 @@ pub fn schedule(c_p_course_id: *const i32,
                 c_s_period: *mut i32,
                 c_s_num: *mut i32){
     unsafe{
-        let mut freq: [i32; 30] = [0; 30];
+        let mut freq: [i32; 29] = [0; 29];
 
 
         let mut i: isize = 0;
@@ -28,8 +28,8 @@ pub fn schedule(c_p_course_id: *const i32,
         }
 
 
-        let class_id = 0;
-        let offset: i32 = 1000;
+        *c_c_num = 0;
+        let class_id_offset: i32 = 1000;
 
         let mut course_index = 0;
         for x in &freq{
@@ -37,12 +37,23 @@ pub fn schedule(c_p_course_id: *const i32,
 
             let num_classes = (x+16)/15;
 
+            println!("Number of classes for index: {}",num_classes);
 
+            let mut i = 0;
+            while i < num_classes+1 {
+                *c_c_id.offset(*c_c_num as isize) = (*c_c_num)+class_id_offset;
+                *c_c_course_id.offset(*c_c_num as isize) = course_index;
+                *c_c_period.offset(*c_c_num as isize) = (i % 7) + 1;
+
+                *c_c_num += 1;
+                i += 1;
+            }
 
             course_index += 1;
         }
+        println!("Number of classes: {}",*c_c_num);
 
-        *c_s_num = 101;
+
     }
 
 }

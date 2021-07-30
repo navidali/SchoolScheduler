@@ -68,7 +68,16 @@ def generate_schedule():
                  c_s_period,
                  c_s_num)
 
-    print(int.from_bytes(c_s_num, byteorder='little'))
+    print(int.from_bytes(c_c_num, byteorder='little'))
+    print(int.from_bytes(c_c_id[0:4],byteorder='little'))
+
+    p_c_c_num = int.from_bytes(c_c_num, byteorder='little')
+
+    for x in range(p_c_c_num):
+        Class.insert(int.from_bytes(c_c_id[(4*x):((4*x)+4)],byteorder='little'), int.from_bytes(c_c_course_id[(4*x):((4*x)+4)]),int.from_bytes(c_c_period[(4*x):((4*x)+4)]))
+        
+
+
 
 """
 
