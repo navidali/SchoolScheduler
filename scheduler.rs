@@ -1,5 +1,17 @@
 #[no_mangle]
 
+pub fn available(id: i32,period: i32,c_s_student_id: *mut i32, c_s_period: *mut i32) -> bool {
+    let mut i = 0;
+    while i < 7000 {
+
+        
+
+        i+= 1;
+    }
+
+    return false;
+}
+
 pub fn schedule(c_p_course_id: *const i32,
                 c_p_student_id: *const i32,
                 c_p_period: *const i32,
@@ -51,6 +63,17 @@ pub fn schedule(c_p_course_id: *const i32,
 
             course_index += 1;
         }
+
+        let mut id = 0;
+        while id < 1000 {
+
+
+
+
+            id+= 1
+        }
+
+
         println!("Number of classes: {}",*c_c_num);
 
 

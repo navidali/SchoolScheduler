@@ -17,7 +17,7 @@ from db_alchemy import *
 def generate_schedule():
     # s = Schedule.by_student_id(0)
 
-    #data structures need to be passed to rust
+    # data structures need to be passed to rust
 
     #
     # Preferences course_id, student_id, period      Ready Only
@@ -41,16 +41,16 @@ def generate_schedule():
     c_p_course_id = (ctypes.c_int32 * len(p_course_id))(*p_course_id)
     c_p_student_id = (ctypes.c_int32 * len(p_student_id))(*p_student_id)
     c_p_period = (ctypes.c_int32 * len(p_period))(*p_period)
-    #c_p_num = ctypes.c_int32
+    # c_p_num = ctypes.c_int32
 
-    c_c_id = create_string_buffer(4*len(p_student_id))
-    c_c_course_id = create_string_buffer(4*len(p_student_id))
-    c_c_period = create_string_buffer(4*len(p_student_id))
+    c_c_id = create_string_buffer(4 * len(p_student_id))
+    c_c_course_id = create_string_buffer(4 * len(p_student_id))
+    c_c_period = create_string_buffer(4 * len(p_student_id))
     c_c_num = create_string_buffer(4)
 
-    c_s_student_id = create_string_buffer(4*len(p_student_id))
-    c_s_class_id = create_string_buffer(4*len(p_student_id))
-    c_s_period = create_string_buffer(4*len(p_student_id))
+    c_s_student_id = create_string_buffer(4 * len(p_student_id))
+    c_s_class_id = create_string_buffer(4 * len(p_student_id))
+    c_s_period = create_string_buffer(4 * len(p_student_id))
     c_s_num = create_string_buffer(4)
 
     lib.schedule(c_p_course_id,
@@ -69,14 +69,14 @@ def generate_schedule():
                  c_s_num)
 
     print(int.from_bytes(c_c_num, byteorder='little'))
-    print(int.from_bytes(c_c_id[0:4],byteorder='little'))
+    print(int.from_bytes(c_c_id[0:4], byteorder='little'))
 
     p_c_c_num = int.from_bytes(c_c_num, byteorder='little')
 
     for x in range(p_c_c_num):
-        Class.insert(int.from_bytes(c_c_id[(4*x):((4*x)+4)],byteorder='little'), int.from_bytes(c_c_course_id[(4*x):((4*x)+4)]),int.from_bytes(c_c_period[(4*x):((4*x)+4)]))
-        
-
+        Class.insert(int.from_bytes(c_c_id[(4 * x):((4 * x) + 4)], byteorder='little'),
+                     int.from_bytes(c_c_course_id[(4 * x):((4 * x) + 4)], byteorder='little'),
+                     int.from_bytes(c_c_period[(4 * x):((4 * x) + 4)],byteorder='little'))
 
 
 """
@@ -145,11 +145,13 @@ def generate_schedule():
     generate_pdfs()
 
 """
+
+
 # Generate PDF schedules
 
 
 def generate_pdfs():
-    #pdfmetrics.registerFont(TTFont('DejaVuSans', 'DejaVuSans.ttf'))
+    # pdfmetrics.registerFont(TTFont('DejaVuSans', 'DejaVuSans.ttf'))
     for x in range(1):
         student = Student.by_id(x)
         schedules = Schedule.by_student_id(x)
