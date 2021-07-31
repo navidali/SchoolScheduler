@@ -594,6 +594,9 @@ class Ui_MainWindow(object):
         self.show_edit_elements()
         self.tableWidget.clear()
         self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.AllEditTriggers)
+        self.tableWidget.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem("Name"))
+        self.tableWidget.setHorizontalHeaderItem(1, QtWidgets.QTableWidgetItem("Credits"))
+        self.tableWidget.setHorizontalHeaderItem(2, QtWidgets.QTableWidgetItem("Grade"""))
         #self.check_box_enabled(True)
 
     def enter_edit_mode(self):
