@@ -43,12 +43,15 @@ class Student(Base):
 
     @staticmethod
     def available(student_id, period):
-        num_in_period = \
-            session.execute(session.query(func.count(Schedule.id)).where(Schedule.student_id == student_id).where(
-                Schedule.period == period)).scalar()
+        num_in_period = session.execute(f"SELECT COUNT(Schedule.id) FROM Schedule WHERE Schedule.student_id == {student_id} AND Schedule.period == {period}").scalar()
         if num_in_period == 0:
             return True
         return False
+        # num_in_period = \
+        #     session.execute(session.query(func.count(Schedule.id)).filter(and_(Schedule.student_id == student_id, Schedule.period == period))).scalar()
+        # if num_in_period == 0:
+        #     return True
+        # return False
 
     @staticmethod
     def update_computed(id):
@@ -87,6 +90,10 @@ class Class(Base):
     def by_id(id):
         query = session.query(Class).where(Class.id == id)
         return session.execute(query).scalar()
+
+    @staticmethod
+    def by_course_id_period(id, period):
+        return session.execute(f'SELECT * FROM Class WHERE Class.course_id = {id} AND Class.period = {period}').scalars().all()
 
     @staticmethod
     def get_name(id):
@@ -129,14 +136,16 @@ class Course(Base):
     def available(id, period, student_id):
         #id is course_id
         #need to get classes by course id and period?
-        classes = session.execute(
-            session.query(Class).where(Class.course_id == id).where(Class.period == period)).scalars().all()
-        for c in classes:
-            count = session.execute(session.query(func.count(Schedule.id)).where(Schedule.class_id == c.id).where(
-                Schedule.period == period)).scalar()
-            if count < 15:
-                return c.id
+        available_class = session.execute(f"Select c.cid, COUNT(c.cid) FROM (SELECT id as cid FROM CLASS WHERE course_id = {id} and period = {period}) c LEFT JOIN Schedule ON c.cid = SCHEDULE.class_id GROUP BY(c.cid) HAVING COUNT(c.cid) <= 15 LIMIT 1").scalar()
+        if available_class != None:
+            return available_class
         return -1
+        # for c in classes:
+        #     count = session.execute(session.query(func.count(Schedule.id)).filter(and_(Schedule.class_id == c.id,
+        #         Schedule.period == period))).scalar()
+        #     if count < 15:
+        #         return c.id
+        # return -1
 
 
 class Schedule(Base):
