@@ -77,7 +77,27 @@ def generate_schedule():
         Class.insert(int.from_bytes(c_c_id[(4 * x):((4 * x) + 4)], byteorder='little'),
                      int.from_bytes(c_c_course_id[(4 * x):((4 * x) + 4)], byteorder='little'),
                      int.from_bytes(c_c_period[(4 * x):((4 * x) + 4)],byteorder='little'))
+    session.commit()
 
+    for i in range(10):
+
+        pref = Preference.by_student_id(i)
+        for p in pref:
+            for x in range(1, 8):
+                class_id_search = Course.available(p.course_id, x, i)
+                if not class_id_search == -1 and Student.available(i, x):
+                    Schedule.insert(i, class_id_search, x)
+                    break
+        # Check for empty slots in schedule
+        for x in range(1, 8):
+            if Student.available(i, x):
+                Schedule.insert(Course.available(28, x, i), 28, x)
+
+    session.commit()
+
+    print("Hello")
+
+    generate_pdfs()
 
 """
 
@@ -127,25 +147,7 @@ def generate_schedule():
         for x in range(1, num_classes + 1):
             Class.insert(class_id, item, (x % 7) + 1)
             class_id += 1
-
-    for id in range(10):
-
-        pref = Preference.by_student_id(id)
-        for p in pref:
-            for x in range(1, 8):
-                class_id_search = Course.available(p.course_id, x, id)
-                if not class_id_search == -1 and Student.available(id, x):
-                    Schedule.insert(id, class_id_search, x)
-                    break
-        # Check for empty slots in schedule
-        for x in range(1, 8):
-            if Student.available(id, x):
-                Schedule.insert(Course.available(28, x, id), 28, x)
-
-    generate_pdfs()
-
 """
-
 
 # Generate PDF schedules
 
