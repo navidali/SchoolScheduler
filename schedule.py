@@ -73,11 +73,22 @@ def generate_schedule():
 
     p_c_c_num = int.from_bytes(c_c_num, byteorder='little')
     class_dict = dict()
+    class_array_dict = [dict(),dict(),dict(),dict(),dict(),dict(),dict()]
     for x in range(p_c_c_num):
         Class.insert(int.from_bytes(c_c_id[(4 * x):((4 * x) + 4)], byteorder='little') - 1000,
                      int.from_bytes(c_c_course_id[(4 * x):((4 * x) + 4)], byteorder='little'),
                      int.from_bytes(c_c_period[(4 * x):((4 * x) + 4)], byteorder='little'))
         class_dict[x] = 0
+        #array[period : dict(course_id, class_id),]
+        try:
+            if int.from_bytes(c_c_course_id[(4 * x):((4 * x) + 4)], byteorder='little') not in class_array_dict[int.from_bytes(c_c_period[(4 * x):((4 * x) + 4)], byteorder='little')-1].keys():
+                class_array_dict[int.from_bytes(c_c_period[(4 * x):((4 * x) + 4)], byteorder='little')-1][int.from_bytes(c_c_course_id[(4 * x):((4 * x) + 4)], byteorder='little')] = [x]
+            else:
+                class_array_dict[int.from_bytes(c_c_period[(4 * x):((4 * x) + 4)], byteorder='little') - 1][int.from_bytes(c_c_course_id[(4 * x):((4 * x) + 4)], byteorder='little')].append(x)
+        except KeyError:
+            print(f"{int.from_bytes(c_c_period[(4 * x):((4 * x) + 4)], byteorder='little')-1}, {int.from_bytes(c_c_course_id[(4 * x):((4 * x) + 4)], byteorder='little')}, {x}")
+
+
     # TODO FIX HARD CODED STUDENT IDs
 
     for id in range(1000):
@@ -87,18 +98,21 @@ def generate_schedule():
         for p in pref:
             for x in range(1, 8):
                 if x not in filled:
-                    class_id_search = Class.by_course_id_period(p.course_id, x)
+                    class_id_search = class_array_dict[x-1][p.course_id]
+                    appended = False
                     for c in class_id_search:
-                        if class_dict[c] < 15 and Student.available(id, x):
+                        if class_dict[c] < 15:
                             Schedule.insert(id, c, x)
                             class_dict[c] = int(class_dict[c]) + 1
                             filled.append(x)
+                            appended = True
                             break
+                    if appended:
+                        break
         # Check for empty slots in schedule
         for x in range(1, 8):
             if x not in filled:
-                if Student.available(id, x):
-                    Schedule.insert(id, -1, x)
+                Schedule.insert(id, -1, x)
     generate_pdfs()
     session.commit()
 
