@@ -438,7 +438,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Scheduler"))
         self.dropdown.setItemText(0, _translate("MainWindow", "Students"))
         self.dropdown.setItemText(1, _translate("MainWindow", "Courses"))
         self.plusbutton.setText(_translate("MainWindow", "+"))
@@ -507,6 +507,11 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Credits"))
         item = self.tableWidget.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Grade"))
+        stylesheet = "::section{border-radius:14px;}"
+        self.tableWidget.horizontalHeader().setStyleSheet(stylesheet)
+        self.tableWidget.setRowCount(3)
+        self.tableWidget.setFixedWidth(302)
+        self.tableWidget.setFixedHeight(128)
         __sortingEnabled = self.tableWidget.isSortingEnabled()
         self.tableWidget.setSortingEnabled(False)
         #         item = self.tableWidget.item(0, 0)
@@ -994,8 +999,11 @@ class Ui_MainWindow(object):
 
                 if len(classes) == 0:
                     self.tableWidget.setRowCount(3)
+                    self.tableWidget.setFixedWidth(302)
+                    self.tableWidget.setFixedHeight(128)
                 else:
                     self.tableWidget.setRowCount(len(classes))
+                    self.tableWidget.setFixedWidth(319)
 
                 for c in classes:
                     self.tableWidget.setItem(index, 0, QtWidgets.QTableWidgetItem(c.class_name))
