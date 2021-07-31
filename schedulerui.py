@@ -667,6 +667,10 @@ class Ui_MainWindow(object):
         self.hide_edit_elements()
         self.check_box_enabled(False)
         self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidget.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem("Name"))
+        self.tableWidget.setHorizontalHeaderItem(1, QtWidgets.QTableWidgetItem("Credits"))
+        self.tableWidget.setHorizontalHeaderItem(2, QtWidgets.QTableWidgetItem("Grade"""))
+
 
     def search_mode(self, name, index):
         if index == 0:
