@@ -122,6 +122,11 @@ class Course(Base):
         session.commit()
 
     @staticmethod
+    def by_name(name):
+        query = session.query(Course).where(Course.name == name)
+        return session.execute(query).scalar()
+
+    @staticmethod
     def available(id, period, student_id):
         classes = session.execute(
             session.query(Class).where(Class.id == id).where(Class.period == period)).scalars().all()
