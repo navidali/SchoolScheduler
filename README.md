@@ -11,10 +11,6 @@ Easily make modifications using our intuitive UI
 
 pip information TBA
 
-How to use program
-***NOTE Current Beta Modifications***
-Student data is artificially generated upto 100 students for performance until we migrate algorithm to C++
-
 Release Version
 
 1.00V
