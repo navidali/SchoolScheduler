@@ -9,7 +9,9 @@ Easy PDF export for mass printing
 Keeps Track of Students Graduation Requirement to Recommend schedules
 Easily make modifications using our intuitive UI
 
-pip information TBA
+Pip Information: pip install SchoolSchedulerApp
+
+Console Command: play_scheduler
 
 Release Version
 
