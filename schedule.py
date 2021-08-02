@@ -98,7 +98,10 @@ def generate_schedule():
         for p in pref:
             for x in range(1, 8):
                 if x not in filled:
-                    class_id_search = class_array_dict[x-1][p.course_id]
+                    try:
+                        class_id_search = class_array_dict[x-1][p.course_id]
+                    except KeyError:
+                        break
                     appended = False
                     for c in class_id_search:
                         if class_dict[c] < 15:
@@ -123,30 +126,31 @@ def generate_pdfs():
     # pdfmetrics.registerFont(TTFont('DejaVuSans', 'DejaVuSans.ttf'))
     for x in range(1000):
         student = Student.by_id(x)
-        schedules = Schedule.by_student_id(x)
-        canvas = Canvas(f"export/{student.first}_{x}.pdf", pagesize=(8.5 * inch, 11 * inch / 2))
-        y_pos = 330
-        canvas.setFont('Helvetica', 16)
-        canvas.drawString(60, y_pos, f"{student.first} {student.last}")
-        canvas.setFont('Helvetica', 12)
-        # fix grade to be in db?
-        canvas.drawString(340, y_pos,
-                          f"Student Id: {student.id}    GPA: {student.gpa}    Grade: {math.floor(student.id / 250 + 9)}")
-        data = [("Class Period", "Class Name")]
-        for sch in schedules:
-            y_pos = y_pos - 36
-            #print(sch)
-            sch_class = ""
-            if sch.class_id == -1:
-                sch_class = "Study Hall"
-            else:
-                sch_class = Class.get_name(sch.class_id)
-            # canvas.drawString(60, y_pos, f"Period {sch['period']}: {sch_class['name']}")
-            data.append((f"Period {sch.period}", sch_class))
-        table = Table(data, 2 * inch, .325 * inch)
-        table.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 12), ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
-                                   ('LEFTPADDING', (1, 0), (-1, -1), 30),
-                                   ('GRID', (0, 0), (-1, -1), 0.25, colors.black)]))
-        table.wrapOn(canvas, 8 * inch, 8 * inch)
-        table.drawOn(canvas, 60, 90)
-        canvas.save()
+        if student != None:
+            schedules = Schedule.by_student_id(x)
+            canvas = Canvas(f"export/{student.first}_{x}.pdf", pagesize=(8.5 * inch, 11 * inch / 2))
+            y_pos = 330
+            canvas.setFont('Helvetica', 16)
+            canvas.drawString(60, y_pos, f"{student.first} {student.last}")
+            canvas.setFont('Helvetica', 12)
+            # fix grade to be in db?
+            canvas.drawString(340, y_pos,
+                              f"Student Id: {student.id}    GPA: {student.gpa}    Grade: {math.floor(student.id / 250 + 9)}")
+            data = [("Class Period", "Class Name")]
+            for sch in schedules:
+                y_pos = y_pos - 36
+                #print(sch)
+                sch_class = ""
+                if sch.class_id == -1:
+                    sch_class = "Study Hall"
+                else:
+                    sch_class = Class.get_name(sch.class_id)
+                # canvas.drawString(60, y_pos, f"Period {sch['period']}: {sch_class['name']}")
+                data.append((f"Period {sch.period}", sch_class))
+            table = Table(data, 2 * inch, .325 * inch)
+            table.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 12), ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
+                                       ('LEFTPADDING', (1, 0), (-1, -1), 30),
+                                       ('GRID', (0, 0), (-1, -1), 0.25, colors.black)]))
+            table.wrapOn(canvas, 8 * inch, 8 * inch)
+            table.drawOn(canvas, 60, 90)
+            canvas.save()
