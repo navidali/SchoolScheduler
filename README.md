@@ -1,6 +1,6 @@
 # School Scheduler
 
-School Scheduler is a utility designed to help High School administrator create student, teacher, and classroom schedules. This task is usually done by hand or in unoptimized programs such as excel. We leverage the computational power of a computer to check thousands of potential schedules per second.
+School Scheduler is a utility designed to help High School administrator create student schedules. This task is usually done by hand or in unoptimized programs such as excel. We leverage the computational power of a computer to check thousands of potential schedules per second.
 
 ![Home Page](images/home.png "Home Page After Importing") ![Sample Schedule](images/schedule.png "Sample Schedule After Generation")
 ## Features
